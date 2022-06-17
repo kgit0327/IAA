@@ -1,6 +1,4 @@
 function [INT, GRA, Itheta] = GetTorques_
-    
-
     tic
     syms m0 m1 m2 m3 m4 
     syms g [3 1] 
@@ -187,7 +185,6 @@ function [INT, GRA, Itheta] = GetTorques_
     
     L0 = l0.*TorCS(:, 3);
     Lg0 = 0.428*l0.*TorCS(:, 3);
-
     L1 = l1.*(-UaCS(:, 3));
     Lg1 = L1.*0.529;
     L2 = l2.*(-FaCS(:, 3));
@@ -233,16 +230,7 @@ function [INT, GRA, Itheta] = GetTorques_
     ag3 = a3+cross(omd3, Lg3)+Bg3;
     ag4 = a4+cross(omd4, Lg4)+Bg4;
 
-    fprintf('a, ag defined\t')
-    toc
-
-    tic
-%     ag0 = simplify_subs_pre(ag0);
-%     ag1 = simplify_subs_pre(ag1);
-%     ag2 = simplify_subs_pre(ag2);
-%     ag3 = simplify_subs_pre(ag3);
-%     ag4 = simplify_subs_pre(ag4);
-
+    
     fprintf('Other vars defined\t')
     toc
     
@@ -254,18 +242,11 @@ function [INT, GRA, Itheta] = GetTorques_
     F1 = m1*ag1-m1*g+F2;
     F0 = m0*ag0-m0*g+F1;
 
-%     F0 = simplify_subs_pre(F0);
-%     F1 = simplify_subs_pre(F1);
-%     F2 = simplify_subs_pre(F2);
-%     F3 = simplify_subs_pre(F3);
-%     F4 = simplify_subs_pre(F4);
-
     fprintf('F defined\t')
     toc
     
     tic
     RJT4 = I_gcs4*omd4+cross(om4, (I_gcs4*om4))     -cross(-Lg4, F4);
-    toc
     RJT3 = I_gcs3*omd3+cross(om3, (I_gcs3*om3))+RJT4-cross(-Lg3, F3)-cross((L3-Lg3), -F4);
     RJT2 = I_gcs2*omd2+cross(om2, (I_gcs2*om2))+RJT3-cross(-Lg2, F2)-cross((L2-Lg2), -F3);
     RJT1 = I_gcs1*omd1+cross(om1, (I_gcs1*om1))+RJT2-cross(-Lg1, F1)-cross((L1-Lg1), -F2);
@@ -284,7 +265,7 @@ function [INT, GRA, Itheta] = GetTorques_
     %%
     th2d_ = [formula(th2d0_); formula(th2d1_); formula(th2d2_); formula(th2d3_); formula(th2d4_)];
 
-    [Coeff, Term] = coeffs_Vector(RJT, [th2d_', g']);
+    [Coeff, ~] = coeffs_Vector(RJT, [th2d_', g']);
 
     GRA = -Coeff(:, 16:18);
     Itheta = Coeff(:, 1:15);

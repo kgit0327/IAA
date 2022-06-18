@@ -145,5 +145,6 @@ function segdat = GetRacketSegmentData(ExperimentDatas, iData)
     segdat.E            = E;                    %全エネルギー 
 
     segdat.rh_an        = rh_an;
+    segdat.Var          = Var;
 
 end

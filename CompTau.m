@@ -36,6 +36,8 @@ FaCS = ExperimentDatas(iData).SCS(2).Var;
 HdCS = ExperimentDatas(iData).SCS(1).Var;
 RaCS = Racketsegdat.Var;
 
+
+
 om0 = ExperimentDatas(iData).segdat(14).seganV_GCS;
 om1 = ExperimentDatas(iData).segdat(3).seganV_GCS;
 om2 = ExperimentDatas(iData).segdat(2).seganV_GCS;

@@ -70,4 +70,5 @@ function Constants = GetConstants(ExperimentDatas)
                    I3(1) I3(2) I3(3); ...
                    I4(1) I4(2) I4(3)];
     Constants.l = [l0_; l1_; l2_; l3_; l4_];
+    Constants.g = [0; 0; -9.807];
 end

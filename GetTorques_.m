@@ -90,10 +90,10 @@ function [INT, GRA, Itheta] = GetTorques_
     ElCS(:, 1) = cross(ElCS(:, 2), ShCS(:, 1));
     ElCS(:, 3) = cross(ElCS(:, 1), ElCS(:, 2));
 
-%     WrCS(:, 1) = FaCS(:, 3);
-%     WrCS(:, 2) = FaCS(:, 3);
-%     WrCS(:, 3) = FaCS(:, 2);
-%     WrCS(:, 2) = cross(WrCS(:, 3), WrCS(:, 1));
+    WrCS(:, 1) = FaCS(:, 3);
+    WrCS(:, 2) = FaCS(:, 3);
+    WrCS(:, 3) = FaCS(:, 2);
+    WrCS(:, 2) = cross(WrCS(:, 3), WrCS(:, 1));
 
     RhCS(:, 1) = RaCS(:, 3);
     RhCS(:, 2) = FaCS(:, 3);
@@ -136,13 +136,15 @@ function [INT, GRA, Itheta] = GetTorques_
          + dot(diff(ElCS(:, 3), t), ElCS(:, 1)).*ElCS(:, 2) ...
          + dot(diff(ElCS(:, 1), t), ElCS(:, 2)).*ElCS(:, 3);
 
-    Om3 = dot(diff(RhCS(:, 2), t), RhCS(:, 3)).*RhCS(:, 1) ...
+    Om3 = dot(diff(WrCS(:, 2), t), WrCS(:, 3)).*WrCS(:, 1) ...
+         + dot(diff(WrCS(:, 3), t), WrCS(:, 1)).*WrCS(:, 2) ...
+         + dot(diff(WrCS(:, 1), t), WrCS(:, 2)).*WrCS(:, 3);
+    
+    Om4 = dot(diff(RhCS(:, 2), t), RhCS(:, 3)).*RhCS(:, 1) ...
          + dot(diff(RhCS(:, 3), t), RhCS(:, 1)).*RhCS(:, 2) ...
          + dot(diff(RhCS(:, 1), t), RhCS(:, 2)).*RhCS(:, 3);
 
-    Om4 = dot(diff(RaCS(:, 2), t), RaCS(:, 3)).*RaCS(:, 1) ...
-         + dot(diff(RaCS(:, 3), t), RaCS(:, 1)).*RaCS(:, 2) ...
-         + dot(diff(RaCS(:, 1), t), RaCS(:, 2)).*RaCS(:, 3);
+
 
     fprintf('om, Om calculated\t')
     toc

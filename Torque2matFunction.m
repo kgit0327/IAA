@@ -38,7 +38,7 @@ createTask(job, @matlabFunction, 1, ...
 submit(job)
 job.Tasks
 
-wait(job)
+% wait(job)
 
 GitComiiter('find file up-to-date')
 

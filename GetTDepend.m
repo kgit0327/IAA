@@ -10,14 +10,46 @@ function tDeps = GetTDepend(ExperimentDatas)
     FaCS = nan(3, 3, NUM_FRAME);
     HdCS = nan(3, 3, NUM_FRAME);
     RaCS = nan(3, 3, NUM_FRAME);
-    
-    for iFrame = 1 : NUM_FRAME
-        TorCS(:, :, iFrame) = ExperimentDatas(iData).SCS(14).Var(iFrame).R;
-        UaCS(:, :, iFrame) = ExperimentDatas(iData).SCS(3).Var(iFrame).R;
-        FaCS(:, :, iFrame) = ExperimentDatas(iData).SCS(2).Var(iFrame).R;
-        HdCS(:, :, iFrame) = ExperimentDatas(iData).SCS(1).Var(iFrame).R;
-        RaCS(:, :, iFrame) = RacketSegdat.Var(iFrame).R;
-    end
+
+    x0 = unitvec(ExperimentDatas(iData).clav - ExperimentDatas(iData).shR);
+    y0 = unitvec(cross(ExperimentDatas(iData).clav - ExperimentDatas(iData).troC, 1), x0);
+    z0 = unitvec(cross(x0, y0, 1));
+
+    TorCS = [reshape(x0, [3 1 NUM_FRAME]), reshape(y0, [3 1 NUM_FRAME], reshape(z0, [3 1 NUM_FRAME]))];
+
+    z1 = unitvec(ExperimentDatas(iData).n.shR - ExperimentDatas(iData).n.elbR);
+    z2 = unitvec(ExperimentDatas(iData).n.elbR - ExperimentDatas(iData).n.wrR);
+    z3 = unitvec(ExperimentDatas(iData).n.wrR - RacketSegdat.n(22:24, :));
+    z4 = unitvec(RacketSegdat.n(22:24, :) - RacketSegdat.n(1:3, :));
+
+    x1 = unitvec(cross(z2, z1));
+    y1 = unitvec(cross(z1, x1));
+
+    k = ExperimentDatas(iData).n.wrRO - ExperimentDatas(iData).n.wrRI;
+
+    y2 = unitvec(cross(z2, k));
+    x2 = unitvec(y2, z2);
+
+    x3 = unitvec(cross(k, z3));
+
+    y3 = unitvec(z3, x3);
+
+    x4 = unitvec(cross(k, z4));
+    y4 = unitvec(cross(z4, x4));
+
+    UaCS = [reshape(x1, [3 1 NUM_FRAME]), reshape(y1, [3 1 NUM_FRAME], reshape(z1, [3 1 NUM_FRAME]))];
+    FaCS = [reshape(x2, [3 1 NUM_FRAME]), reshape(y2, [3 1 NUM_FRAME], reshape(z2, [3 1 NUM_FRAME]))];
+    HdCS = [reshape(x3, [3 1 NUM_FRAME]), reshape(y3, [3 1 NUM_FRAME], reshape(z3, [3 1 NUM_FRAME]))];
+    RaCS = [reshape(x4, [3 1 NUM_FRAME]), reshape(y4, [3 1 NUM_FRAME], reshape(z4, [3 1 NUM_FRAME]))];
+
+%     for iFrame = 1 : NUM_FRAME
+%         TorCS(:, :, iFrame) = ExperimentDatas(iData).SCS(14).Var(iFrame).R;
+%         UaCS(:, :, iFrame) = ExperimentDatas(iData).SCS(3).Var(iFrame).R;
+%         FaCS(:, :, iFrame) = ExperimentDatas(iData).SCS(2).Var(iFrame).R;
+%         HdCS(:, :, iFrame) = ExperimentDatas(iData).SCS(1).Var(iFrame).R;
+%         RaCS(:, :, iFrame) = RacketSegdat.Var(iFrame).R;
+%     end
+
     TlowCS = TorCS;
     
     ShCS(:, 1, :) = UaCS(:, 3, :);

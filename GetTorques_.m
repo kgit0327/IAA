@@ -168,7 +168,7 @@ function [INT, GRA, Itheta] = GetTorques_
     I_lcs3 = diag(I3);
     I_lcs4 = diag(I4);
 
-    I_gcs0 = UaCS*I_lcs0*UaCS.';
+    I_gcs0 = TorCS*I_lcs0*TorCS.';
     I_gcs1 = UaCS*I_lcs1*UaCS.';
     I_gcs2 = FaCS*I_lcs2*FaCS.';
     I_gcs3 = HdCS*I_lcs3*HdCS.';

@@ -57,7 +57,7 @@ function segdat = GetRacketSegmentData(ExperimentDatas, iData)
     lcs.jd = dif3(lcs.j, DataLength, 1/200);
     lcs.kd = dif3(lcs.k, DataLength, 1/200);
     
-    I_LCS = [0.001683774, 0, 0; 0, 0.001614409, 0; 0, 0, 0.0000693642655057362];
+    I_LCS = [0.004804793, 0, 0; 0, 0.004619344, 0; 0, 0, 0.000172579];
 %     I_LCS = [0.01, 0, 0; 0, 0.01, 0; 0, 0, 0.001];
     m = 0.0915;
 

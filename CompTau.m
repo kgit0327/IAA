@@ -66,14 +66,14 @@ th2d4 = tDeps.th2d4;
 a_tor = tDeps.a_tor;
 
 
-Tau = nan(15, RM - GC + 1);
+Tau = nan(15, NUM_FRAME); % RM - GC + 1);
 
 fprintf('Initialized\n')
 toc
 
-parfor iFrame = 1 : RM - GC + 1
+parfor iFrame = 1 : NUM_FRAME % RM - GC + 1
     tic
-    iFrame_ = GC - 1 + iFrame;
+    iFrame_ = iFrame; % GC - 1 + iFrame;
 
     th0_1 = th0(1, iFrame_);
     th0_2 = th0(2, iFrame_);

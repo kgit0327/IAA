@@ -1,4 +1,5 @@
-% clear all
+tic
+clear all
 
 load('NPMEAN.mat');
 
@@ -67,8 +68,11 @@ a_tor = tDeps.a_tor;
 
 Tau = nan(15, RM - GC + 1);
 
-parfor iFrame = 1 : RM - GC + 1
+fprintf('Initialized\n')
+toc
 
+parfor iFrame = 1 : RM - GC + 1
+    tic
     iFrame_ = GC - 1 + iFrame;
 
     th0_1 = th0(1, iFrame_);
@@ -135,5 +139,6 @@ parfor iFrame = 1 : RM - GC + 1
     Tau(:, iFrame) = Tau_;
 
     fprintf('Number %d done.\n', iFrame)
+    toc
 
 end

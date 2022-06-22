@@ -11,11 +11,11 @@ function tDeps = GetTDepend(ExperimentDatas)
     HdCS = nan(3, 3, NUM_FRAME);
     RaCS = nan(3, 3, NUM_FRAME);
 
-    x0 = unitvec(ExperimentDatas(iData).clav - ExperimentDatas(iData).shR);
-    y0 = unitvec(cross(ExperimentDatas(iData).clav - ExperimentDatas(iData).troC, 1), x0);
+    x0 = unitvec(ExperimentDatas(iData).n.clav - ExperimentDatas(iData).n.shR);
+    y0 = unitvec(cross((ExperimentDatas(iData).n.clav - ExperimentDatas(iData).n.troC), x0, 1));
     z0 = unitvec(cross(x0, y0, 1));
 
-    TorCS = [reshape(x0, [3 1 NUM_FRAME]), reshape(y0, [3 1 NUM_FRAME], reshape(z0, [3 1 NUM_FRAME]))];
+    TorCS = [reshape(x0, [3, 1, NUM_FRAME]), reshape(y0, [3, 1, NUM_FRAME]), reshape(z0, [3, 1, NUM_FRAME])];
 
     z1 = unitvec(ExperimentDatas(iData).n.shR - ExperimentDatas(iData).n.elbR);
     z2 = unitvec(ExperimentDatas(iData).n.elbR - ExperimentDatas(iData).n.wrR);
@@ -28,19 +28,19 @@ function tDeps = GetTDepend(ExperimentDatas)
     k = ExperimentDatas(iData).n.wrRO - ExperimentDatas(iData).n.wrRI;
 
     y2 = unitvec(cross(z2, k));
-    x2 = unitvec(y2, z2);
+    x2 = unitvec(cross(y2, z2));
 
     x3 = unitvec(cross(k, z3));
 
-    y3 = unitvec(z3, x3);
+    y3 = unitvec(cross(z3, x3));
 
     x4 = unitvec(cross(k, z4));
     y4 = unitvec(cross(z4, x4));
 
-    UaCS = [reshape(x1, [3 1 NUM_FRAME]), reshape(y1, [3 1 NUM_FRAME], reshape(z1, [3 1 NUM_FRAME]))];
-    FaCS = [reshape(x2, [3 1 NUM_FRAME]), reshape(y2, [3 1 NUM_FRAME], reshape(z2, [3 1 NUM_FRAME]))];
-    HdCS = [reshape(x3, [3 1 NUM_FRAME]), reshape(y3, [3 1 NUM_FRAME], reshape(z3, [3 1 NUM_FRAME]))];
-    RaCS = [reshape(x4, [3 1 NUM_FRAME]), reshape(y4, [3 1 NUM_FRAME], reshape(z4, [3 1 NUM_FRAME]))];
+    UaCS = [reshape(x1, [3, 1, NUM_FRAME]), reshape(y1, [3, 1, NUM_FRAME]), reshape(z1, [3, 1, NUM_FRAME])];
+    FaCS = [reshape(x2, [3, 1, NUM_FRAME]), reshape(y2, [3, 1, NUM_FRAME]), reshape(z2, [3, 1, NUM_FRAME])];
+    HdCS = [reshape(x3, [3, 1, NUM_FRAME]), reshape(y3, [3, 1, NUM_FRAME]), reshape(z3, [3, 1, NUM_FRAME])];
+    RaCS = [reshape(x4, [3, 1, NUM_FRAME]), reshape(y4, [3, 1, NUM_FRAME]), reshape(z4, [3, 1, NUM_FRAME])];
 
 %     for iFrame = 1 : NUM_FRAME
 %         TorCS(:, :, iFrame) = ExperimentDatas(iData).SCS(14).Var(iFrame).R;

@@ -3,11 +3,11 @@ clear all
 
 load('NPMEAN.mat');
 
-iData = 10;
+iData = 1;
 iPeriod = 1;
 
-Constants = GetConstants(ExperimentDatas);
-tDeps = GetTDepend(ExperimentDatas);
+Constants = GetConstants(ExperimentDatas, iData);
+tDeps = GetTDepend(ExperimentDatas, iData);
 RacketSegdat = GetRacketSegmentData(ExperimentDatas, iData);
 [GC, ~, ~, RM] = GetTiming(ExperimentDatas, GC2RMFrame, iData, iPeriod);
 
@@ -71,8 +71,8 @@ Tau = nan(15, NUM_FRAME); % RM - GC + 1);
 fprintf('Initialized\n')
 toc
 
+tic
 parfor iFrame = 1 : NUM_FRAME % RM - GC + 1
-    tic
     iFrame_ = iFrame; % GC - 1 + iFrame;
 
     th0_1 = th0(1, iFrame_);
@@ -139,6 +139,7 @@ parfor iFrame = 1 : NUM_FRAME % RM - GC + 1
     Tau(:, iFrame) = Tau_;
 
     fprintf('Number %d done.\n', iFrame)
-    toc
+    
 
 end
+toc

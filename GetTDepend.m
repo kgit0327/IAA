@@ -1,6 +1,5 @@
-function tDeps = GetTDepend(ExperimentDatas)
+function tDeps = GetTDepend(ExperimentDatas, iData)
 
-    iData = 10;
     RacketSegdat = GetRacketSegmentData(ExperimentDatas, iData);
     
     NUM_FRAME = ExperimentDatas(iData).nFr;

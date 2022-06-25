@@ -1,9 +1,9 @@
-function Constants = GetConstants(ExperimentDatas)
+function Constants = GetConstants(ExperimentDatas, iData)
     %%
     
     tic
     
-    iData = 10;
+
     
     RacketSegdat = GetRacketSegmentData(ExperimentDatas, iData);
     

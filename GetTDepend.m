@@ -24,7 +24,7 @@ function tDeps = GetTDepend(ExperimentDatas, iData)
     x1 = unitvec(cross(z2, z1));
     y1 = unitvec(cross(z1, x1));
 
-%     k3 = unitvec(ExperimentDatas(iData).n.wrRO - ExperimentDatas(iData).n.wrRI);
+    k3 = unitvec(ExperimentDatas(iData).n.wrRO - ExperimentDatas(iData).n.wrRI);
     k4 = unitvec(ExperimentDatas(iData).n.Up - ExperimentDatas(iData).n.Bottom);
 
     y2 = unitvec(cross(z2, k3));

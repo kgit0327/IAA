@@ -38,17 +38,3 @@ createTask(job, @matlabFunction, 1, ...
 submit(job)
 job.Tasks
 
-wait(job)
-
-GitComiiter('find file up-to-date')
-
-function GitComiiter(message)
- if nargin < 1
-     message = 'AutoMaticUpdate'
- end
- 
-!git add *.m
-eval(['!git commit -m "',message,'"'])
-!git push origin develop
-
- end

@@ -24,17 +24,18 @@ function tDeps = GetTDepend(ExperimentDatas, iData)
     x1 = unitvec(cross(z2, z1));
     y1 = unitvec(cross(z1, x1));
 
-    k = ExperimentDatas(iData).n.wrRO - ExperimentDatas(iData).n.wrRI;
+    k3 = unitvec(ExperimentDatas(iData).n.wrRO - ExperimentDatas(iData).n.wrRI);
+%     k4 = unitvec(ExperimentDatas(iData).n.Up - ExperimentDatas(iData).n.Bottom);
 
-    y2 = unitvec(cross(z2, k));
+    y2 = unitvec(cross(z2, k3));
     x2 = unitvec(cross(y2, z2));
 
-    x3 = unitvec(cross(k, z3));
+    x3 = unitvec(cross(k3, z3));
 
     y3 = unitvec(cross(z3, x3));
 
-    x4 = unitvec(cross(k, z4));
-    y4 = unitvec(cross(z4, x4));
+    y4 = unitvec(cross(z4, k4));
+    x4 = unitvec(cross(y4, z4));
 
     UaCS = [reshape(x1, [3, 1, NUM_FRAME]), reshape(y1, [3, 1, NUM_FRAME]), reshape(z1, [3, 1, NUM_FRAME])];
     FaCS = [reshape(x2, [3, 1, NUM_FRAME]), reshape(y2, [3, 1, NUM_FRAME]), reshape(z2, [3, 1, NUM_FRAME])];
@@ -65,11 +66,11 @@ function tDeps = GetTDepend(ExperimentDatas, iData)
     WrCS(:, 3, :) = FaCS(:, 2, :);
     WrCS(:, 2, :) = cross(WrCS(:, 3, :), WrCS(:, 1, :));
     
-    RhCS(:, 1, :) = RaCS(:, 3, :);
-    RhCS(:, 2, :) = FaCS(:, 3, :);
-    RhCS(:, 3, :) = HdCS(:, 2, :);
-    RhCS(:, 2, :) = cross(RhCS(:, 3, :), RhCS(:, 1, :));
-    
+%     RhCS(:, 1, :) = RaCS(:, 3, :);
+%     RhCS(:, 2, :) = FaCS(:, 3, :);
+%     RhCS(:, 3, :) = HdCS(:, 2, :);
+%     RhCS(:, 2, :) = cross(RhCS(:, 3, :), RhCS(:, 1, :));
+    RhCS = RaCS;
     
 %     om0_ = ExperimentDatas(iData).segdat(14).seganV_GCS;
 %     om1_ = ExperimentDatas(iData).segdat(3).seganV_GCS;

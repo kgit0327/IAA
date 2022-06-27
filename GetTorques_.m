@@ -95,10 +95,12 @@ function [INT, GRA, Itheta] = GetTorques_
     WrCS(:, 3) = FaCS(:, 2);
     WrCS(:, 2) = cross(WrCS(:, 3), WrCS(:, 1));
 
-    RhCS(:, 1) = RaCS(:, 3);
-    RhCS(:, 2) = FaCS(:, 3);
-    RhCS(:, 3) = HdCS(:, 2);
-    RhCS(:, 2) = cross(RhCS(:, 3), RhCS(:, 1));
+%     RhCS(:, 1) = RaCS(:, 3);
+%     RhCS(:, 2) = FaCS(:, 3);
+%     RhCS(:, 3) = HdCS(:, 2);
+%     RhCS(:, 2) = cross(RhCS(:, 3), RhCS(:, 1));
+
+    RhCS = RaCS;
 
     fprintf('Coordinate system defined\t')
     toc

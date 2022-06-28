@@ -250,11 +250,11 @@ function [INT, GRA, Itheta] = GetTorques_
     toc
     
     tic
-    RJT4 = I_gcs4*omd4+cross(om4, (I_gcs4*om4))     -cross(-Lg4, F4);
-    RJT3 = I_gcs3*omd3+cross(om3, (I_gcs3*om3))+RJT4-cross(-Lg3, F3)-cross((L3-Lg3), -F4);
-    RJT2 = I_gcs2*omd2+cross(om2, (I_gcs2*om2))+RJT3-cross(-Lg2, F2)-cross((L2-Lg2), -F3);
-    RJT1 = I_gcs1*omd1+cross(om1, (I_gcs1*om1))+RJT2-cross(-Lg1, F1)-cross((L1-Lg1), -F2);
-    RJT0 = I_gcs0*omd0+cross(om0, (I_gcs0*om0))+RJT1-cross(-Lg0, F0)-cross(L0, -F1);
+    RJT4 = I_gcs4*omd4+cross(om4, (I_gcs4 * om4))     -cross(-Lg4, F4);
+    RJT3 = I_gcs3*omd3+cross(om3, (I_gcs3 * om3))+RJT4-cross(-Lg3, F3)-cross((L3-Lg3), -F4);
+    RJT2 = I_gcs2*omd2+cross(om2, (I_gcs2 * om2))+RJT3-cross(-Lg2, F2)-cross((L2-Lg2), -F3);
+    RJT1 = I_gcs1*omd1+cross(om1, (I_gcs1 * om1))+RJT2-cross(-Lg1, F1)-cross((L1-Lg1), -F2);
+    RJT0 = I_gcs0*omd0+cross(om0, (I_gcs0 * om0))+RJT1-cross(-Lg0, F0)-cross(L0, -F1);
 
     RJT0 = formula(subs_pre(RJT0));
     RJT1 = formula(subs_pre(RJT1));

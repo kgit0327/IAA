@@ -39,6 +39,6 @@ submit(job)
 job.Tasks
 
 
-% wait(job)
+wait(job)
 
 

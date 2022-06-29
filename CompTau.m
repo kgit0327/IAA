@@ -71,7 +71,7 @@ Tau = nan(15, NUM_FRAME); % RM - GC + 1);
 fprintf('Initialized\n')
 toc
 
-tic
+!whertic
 parfor iFrame = 1 : RM - GC + 1
     iFrame_ = GC - 1 + iFrame;
 

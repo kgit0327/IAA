@@ -4,11 +4,11 @@ function tDeps = GetTDepend(ExperimentDatas, iData)
     
     NUM_FRAME = ExperimentDatas(iData).nFr;
     
-    TorCS = nan(3, 3, NUM_FRAME);
-    UaCS = nan(3, 3, NUM_FRAME);
-    FaCS = nan(3, 3, NUM_FRAME);
-    HdCS = nan(3, 3, NUM_FRAME);
-    RaCS = nan(3, 3, NUM_FRAME);
+%     TorCS = nan(3, 3, NUM_FRAME);
+%     UaCS = nan(3, 3, NUM_FRAME);
+%     FaCS = nan(3, 3, NUM_FRAME);
+%     HdCS = nan(3, 3, NUM_FRAME);
+%     RaCS = nan(3, 3, NUM_FRAME);
 
     x0 = unitvec(ExperimentDatas(iData).n.clav - ExperimentDatas(iData).n.shR);
     y0 = unitvec(cross((ExperimentDatas(iData).n.clav - ExperimentDatas(iData).n.troC), x0, 1));
@@ -79,24 +79,24 @@ function tDeps = GetTDepend(ExperimentDatas, iData)
 %     om4_ = RacketSegdat.seganV_GCS;
 
     th0(2, :) = asin(reshape(TorCS(3, 1, :), [1 NUM_FRAME]));
-    th0(1, :) = -asin(reshape(TorCS(3, 2, :), [1 NUM_FRAME]) / cos(th0(2, :)));
-    th0(3, :) = -asin(reshape(TorCS(2, 1, :), [1 NUM_FRAME]) / cos(th0(2, :)));
+    th0(1, :) = -asin(reshape(TorCS(3, 2, :), [1 NUM_FRAME]) ./ cos(th0(2, :)));
+    th0(3, :) = -asin(reshape(TorCS(2, 1, :), [1 NUM_FRAME]) ./ cos(th0(2, :)));
     
     th1(2, :) = asin(reshape(UaCS(3, 1, :), [1 NUM_FRAME]));
-    th1(1, :) = -asin(reshape(UaCS(3, 2, :), [1 NUM_FRAME]) / cos(th1(2, :)));
-    th1(3, :) = -asin(reshape(UaCS(2, 1, :), [1 NUM_FRAME]) / cos(th1(2, :)));
+    th1(1, :) = -asin(reshape(UaCS(3, 2, :), [1 NUM_FRAME]) ./ cos(th1(2, :)));
+    th1(3, :) = -asin(reshape(UaCS(2, 1, :), [1 NUM_FRAME]) ./ cos(th1(2, :)));
     
     th2(2, :) = asin(reshape(FaCS(3, 1, :), [1 NUM_FRAME]));
-    th2(1, :) = -asin(reshape(FaCS(3, 2, :), [1 NUM_FRAME]) / cos(th2(2, :)));
-    th2(3, :) = -asin(reshape(FaCS(2, 1, :), [1 NUM_FRAME]) / cos(th2(2, :)));
+    th2(1, :) = -asin(reshape(FaCS(3, 2, :), [1 NUM_FRAME]) ./ cos(th2(2, :)));
+    th2(3, :) = -asin(reshape(FaCS(2, 1, :), [1 NUM_FRAME]) ./ cos(th2(2, :)));
     
     th3(2, :) = asin(reshape(HdCS(3, 1, :), [1 NUM_FRAME]));
-    th3(1, :) = -asin(reshape(HdCS(3, 2, :), [1 NUM_FRAME]) / cos(th3(2, :)));
-    th3(3, :) = -asin(reshape(HdCS(2, 1, :), [1 NUM_FRAME]) / cos(th3(2, :)));
+    th3(1, :) = -asin(reshape(HdCS(3, 2, :), [1 NUM_FRAME]) ./ cos(th3(2, :)));
+    th3(3, :) = -asin(reshape(HdCS(2, 1, :), [1 NUM_FRAME]) ./ cos(th3(2, :)));
     
     th4(2, :) = asin(reshape(RaCS(3, 1, :), [1 NUM_FRAME]));
-    th4(1, :) = -asin(reshape(RaCS(3, 2, :), [1 NUM_FRAME]) / cos(th4(2, :)));
-    th4(3, :) = -asin(reshape(RaCS(2, 1, :), [1 NUM_FRAME]) / cos(th4(2, :)));
+    th4(1, :) = -asin(reshape(RaCS(3, 2, :), [1 NUM_FRAME]) ./ cos(th4(2, :)));
+    th4(3, :) = -asin(reshape(RaCS(2, 1, :), [1 NUM_FRAME]) ./ cos(th4(2, :)));
     
     dTorCS = GetDiffR(TorCS);
     dUaCS = GetDiffR(UaCS);

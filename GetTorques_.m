@@ -75,7 +75,7 @@ function [INT, GRA, Itheta] = GetTorques_
     % y0 = TorCS(:, 2);
     % z0 = TorCS(:, 3);
     UaCS = R(th11, th12, th13); %*TorCS;
-    FaCS = R(th21, th22, th23);%*UaCS;
+    FaCS = R(th21, th22, th23); %*UaCS;
     HdCS = R(th31, th32, th33); %*FaCS;
     RaCS = R(th41, th42, th43); %*HdCS;
 

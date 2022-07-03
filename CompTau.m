@@ -72,7 +72,7 @@ fprintf('Initialized\n')
 toc
 
 tic
-parfor iFrame = 1 : RM - GC + 1
+parfor iFrame = 1 : 10
     iFrame_ = GC - 1 + iFrame;
 
     th0_1 = th0(1, iFrame_);

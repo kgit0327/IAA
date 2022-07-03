@@ -72,8 +72,10 @@ fprintf('Initialized\n')
 toc
 
 tic
+
 parfor iFrame = 1 : NUM_FRAME % RM - GC + 1
     iFrame_ = iFrame; %GC - 1 + iFrame;
+
 
     th0_1 = th0(1, iFrame_);
     th0_2 = th0(2, iFrame_);

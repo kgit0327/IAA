@@ -1,7 +1,7 @@
 tic
-% clear all
-% 
-% load('NPMEAN.mat');
+clear all
+
+load('NPMEAN.mat');
 
 iData = 1;
 iPeriod = 1;

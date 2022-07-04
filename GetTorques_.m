@@ -69,14 +69,16 @@ function [INT, GRA, Itheta] = GetTorques_
     R2(th_) = [cos(th_2),0,sin(th_2);0,1,0;-sin(th_2),0,cos(th_2)];
     R3(th_) = [cos(th_3),-sin(th_3),0;sin(th_3),cos(th_3),0;0,0,1];
     R(th_) = R3*R2*R1;
-   
-    % Define segment coordinate system
-    TorCS = R(th01, th02, th03);
-    UaCS = TorCS * R(th11, th12, th13).'; 
-    FaCS = UaCS * R(th21, th22, th23).';
-    HdCS = FaCS * R(th31, th32, th33).';
-    RaCS = HdCS * R(th41, th42, th43).';
     
+    TorCS = R(th01, th02, th03);
+    % x0 = TorCS(:, 1);
+    % y0 = TorCS(:, 2);
+    % z0 = TorCS(:, 3);
+    UaCS = R(th11, th12, th13); %*TorCS;
+    FaCS = R(th21, th22, th23); %*UaCS;
+    HdCS = R(th31, th32, th33); %*FaCS;
+    RaCS = R(th41, th42, th43); %*HdCS;
+
     % Define joint coordinate system, x: distal z, y: cross(z, x), z: proximal x 
     TlowCS(:, 1) = TorCS(:, 3);
     TlowCS(:, 3) = TorCS(:, 1);
@@ -141,6 +143,8 @@ function [INT, GRA, Itheta] = GetTorques_
     Om4 = dot(diff(RhCS(:, 2), t), RhCS(:, 3)).*RhCS(:, 1) ...
          + dot(diff(RhCS(:, 3), t), RhCS(:, 1)).*RhCS(:, 2) ...
          + dot(diff(RhCS(:, 1), t), RhCS(:, 2)).*RhCS(:, 3);
+
+
 
     fprintf('om, Om calculated\t')
     toc
@@ -280,4 +284,3 @@ function [INT, GRA, Itheta] = GetTorques_
 
 
 end
-

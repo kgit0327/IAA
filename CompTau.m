@@ -73,8 +73,8 @@ toc
 
 tic
 
-parfor iFrame = 1 : NUM_FRAME % RM - GC + 1
-    iFrame_ = iFrame; %GC - 1 + iFrame;
+parfor iFrame = 1 : 16 % RM - GC + 1
+    iFrame_ = GC - 1 + iFrame;
 
 
     th0_1 = th0(1, iFrame_);

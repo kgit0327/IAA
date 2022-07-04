@@ -69,38 +69,34 @@ function [INT, GRA, Itheta] = GetTorques_
     R2(th_) = [cos(th_2),0,sin(th_2);0,1,0;-sin(th_2),0,cos(th_2)];
     R3(th_) = [cos(th_3),-sin(th_3),0;sin(th_3),cos(th_3),0;0,0,1];
     R(th_) = R3*R2*R1;
-    
+   
+    % Define segment coordinate system
     TorCS = R(th01, th02, th03);
-    % x0 = TorCS(:, 1);
-    % y0 = TorCS(:, 2);
-    % z0 = TorCS(:, 3);
-    UaCS = R(th11, th12, th13); %*TorCS;
-    FaCS = R(th21, th22, th23); %*UaCS;
-    HdCS = R(th31, th32, th33); %*FaCS;
-    RaCS = R(th41, th42, th43); %*HdCS;
-
-    TlowCS = TorCS;
+    UaCS = TorCS * R(th11, th12, th13); 
+    FaCS = UaCS * R(th21, th22, th23);
+    HdCS = FaCS * R(th31, th32, th33);
+    RaCS = HdCS * R(th41, th42, th43);
+    
+    % Define joint coordinate system, x: distal z, y: cross(z, x), z: proximal x 
+    TlowCS(:, 1) = TorCS(:, 3);
+    TlowCS(:, 3) = TorCS(:, 1);
+    TlowCS(:, 2) = unitvec(cross(TlowCS(:, 3), TlowCS(:, 1)));
 
     ShCS(:, 1) = UaCS(:, 3);
-    ShCS(:, 2) = cross(TorCS(:, 3), ShCS(:, 1));
-    ShCS(:, 3) = cross(ShCS(:, 1), ShCS(:, 2));
+    ShCS(:, 3) = TorCS(:, 1);
+    ShCS(:, 2) = unitvec(cross(ShCS(:, 3), ShCS(:, 1)));
 
-    ElCS(:, 1) = FaCS(:, 3);    
-    ElCS(:, 2) = FaCS(:, 3);
-    ElCS(:, 1) = cross(ElCS(:, 2), ShCS(:, 1));
-    ElCS(:, 3) = cross(ElCS(:, 1), ElCS(:, 2));
+    ElCS(:, 1) = FaCS(:, 3);
+    ElCS(:, 3) = UaCS(:, 1);
+    ElCS(:, 2) = unitvec(cross(ElCS(:, 3), ElCS(:, 1)));
 
-    WrCS(:, 1) = FaCS(:, 3);
-    WrCS(:, 2) = FaCS(:, 3);
-    WrCS(:, 3) = FaCS(:, 2);
-    WrCS(:, 2) = cross(WrCS(:, 3), WrCS(:, 1));
+    WrCS(:, 1) = HdCS(:, 3);
+    WrCS(:, 3) = FaCS(:, 1);
+    WrCS(:, 2) = unitvec(cross(WrCS(:, 3), WrCS(:, 1)));
 
-%     RhCS(:, 1) = RaCS(:, 3);
-%     RhCS(:, 2) = FaCS(:, 3);
-%     RhCS(:, 3) = HdCS(:, 2);
-%     RhCS(:, 2) = cross(RhCS(:, 3), RhCS(:, 1));
-
-    RhCS = RaCS;
+    RhCS(:, 1) = RaCS(:, 3);
+    RhCS(:, 3) = HdCS(:, 1);
+    RhCS(:, 2) = unitvec(cross(RhCS(:, 3), RhCS(:, 1)));
 
     fprintf('Coordinate system defined\t')
     toc
@@ -145,8 +141,6 @@ function [INT, GRA, Itheta] = GetTorques_
     Om4 = dot(diff(RhCS(:, 2), t), RhCS(:, 3)).*RhCS(:, 1) ...
          + dot(diff(RhCS(:, 3), t), RhCS(:, 1)).*RhCS(:, 2) ...
          + dot(diff(RhCS(:, 1), t), RhCS(:, 2)).*RhCS(:, 3);
-
-
 
     fprintf('om, Om calculated\t')
     toc

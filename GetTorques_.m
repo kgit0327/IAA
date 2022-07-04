@@ -72,10 +72,10 @@ function [INT, GRA, Itheta] = GetTorques_
    
     % Define segment coordinate system
     TorCS = R(th01, th02, th03);
-    UaCS = TorCS * R(th11, th12, th13); 
-    FaCS = UaCS * R(th21, th22, th23);
-    HdCS = FaCS * R(th31, th32, th33);
-    RaCS = HdCS * R(th41, th42, th43);
+    UaCS = TorCS * R(th11, th12, th13).'; 
+    FaCS = UaCS * R(th21, th22, th23).';
+    HdCS = FaCS * R(th31, th32, th33).';
+    RaCS = HdCS * R(th41, th42, th43).';
     
     % Define joint coordinate system, x: distal z, y: cross(z, x), z: proximal x 
     TlowCS(:, 1) = TorCS(:, 3);

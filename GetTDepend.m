@@ -33,46 +33,25 @@ function tDeps = GetTDepend(ExperimentDatas, iData)
         RhCS(:, :, iFrame) = RacketSegdat.Var(iFrame).R;
     end
 
-    th0_FE = Unit(5).JA(4, :);
-    th0_Ru = Unit(5).JA(5, :);
-    th0_Rr = Unit(5).JA(6, :);
+    th0(2, :) = asin(reshape(TorCS(3, 1, :), [1 NUM_FRAME]));
+    th0(1, :) = -asin(reshape(TorCS(3, 2, :), [1 NUM_FRAME]) ./ cos(th0(2, :)));
+    th0(3, :) = -asin(reshape(TorCS(2, 1, :), [1 NUM_FRAME]) ./ cos(th0(2, :)));
     
-    th1_FE = Unit(1).JA(1, :);
-
-    th1_Ab = Unit(1).JA(2, :);
-    th1_Er = Unit(1).JA(3, :);
+    th1(2, :) = asin(reshape(UaCS(3, 1, :), [1 NUM_FRAME]));
+    th1(1, :) = -asin(reshape(UaCS(3, 2, :), [1 NUM_FRAME]) ./ cos(th1(2, :)));
+    th1(3, :) = -asin(reshape(UaCS(2, 1, :), [1 NUM_FRAME]) ./ cos(th1(2, :)));
     
-    th2_FE = Unit(1).JA(4, :);
-    th2_VV = Unit(1).JA(5, :); % Valgus+
-    th2_Er = Unit(1).JA(6, :);
+    th2(2, :) = asin(reshape(FaCS(3, 1, :), [1 NUM_FRAME]));
+    th2(1, :) = -asin(reshape(FaCS(3, 2, :), [1 NUM_FRAME]) ./ cos(th2(2, :)));
+    th2(3, :) = -asin(reshape(FaCS(2, 1, :), [1 NUM_FRAME]) ./ cos(th2(2, :)));
     
-    th3_Pf = Unit(1).JA(7, :);
-    th3_Ra = Unit(1).JA(8, :);
-    th3_IE = Unit(1).JA(9, :);
-
-    th4_z = RacketSegdat.rh_an(1, :);
-    th4_y = RacketSegdat.rh_an(2, :);
-    th4_x = RacketSegdat.rh_an(3, :);
-
-    th0 = th0_FE .* reshape(TlowCS(:, 1, :), [3 NUM_FRAME]) ...
-        + th0_Ru .* reshape(TlowCS(:, 2, :), [3 NUM_FRAME]) ...
-        + th0_Rr .* reshape(TlowCS(:, 3, :), [3 NUM_FRAME]);
-
-    th1 = th1_FE .* reshape(ShCS(:, 1, :), [3 NUM_FRAME]) ...
-        + th1_Ab .* reshape(ShCS(:, 2, :), [3 NUM_FRAME]) ...
-        + th1_Er .* reshape(ShCS(:, 3, :), [3 NUM_FRAME]);
-
-    th2 = th2_FE .* reshape(ElCS(:, 1, :), [3 NUM_FRAME]) ...
-        + th2_VV .* reshape(ElCS(:, 2, :), [3 NUM_FRAME]) ...
-        + th2_Er .* reshape(ElCS(:, 3, :), [3 NUM_FRAME]);
-
-    th3 = th3_Pf .* reshape(WrCS(:, 1, :), [3 NUM_FRAME]) ...
-        + th3_Ra .* reshape(WrCS(:, 2, :), [3 NUM_FRAME]) ...
-        + th3_IE .* reshape(WrCS(:, 3, :), [3 NUM_FRAME]);
-
-    th4 = th4_z .* reshape(RhCS(:, 1, :), [3 NUM_FRAME]) ...
-        + th4_y .* reshape(RhCS(:, 2, :), [3 NUM_FRAME]) ...
-        + th4_x .* reshape(RhCS(:, 3, :), [3 NUM_FRAME]);
+    th3(2, :) = asin(reshape(HdCS(3, 1, :), [1 NUM_FRAME]));
+    th3(1, :) = -asin(reshape(HdCS(3, 2, :), [1 NUM_FRAME]) ./ cos(th3(2, :)));
+    th3(3, :) = -asin(reshape(HdCS(2, 1, :), [1 NUM_FRAME]) ./ cos(th3(2, :)));
+    
+    th4(2, :) = asin(reshape(RaCS(3, 1, :), [1 NUM_FRAME]));
+    th4(1, :) = -asin(reshape(RaCS(3, 2, :), [1 NUM_FRAME]) ./ cos(th4(2, :)));
+    th4(3, :) = -asin(reshape(RaCS(2, 1, :), [1 NUM_FRAME]) ./ cos(th4(2, :)));
 
     dTorCS = GetDiffR(TorCS);
     dUaCS = GetDiffR(UaCS);

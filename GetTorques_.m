@@ -84,10 +84,11 @@ function [INT, GRA, Itheta] = GetTorques_
     TlowCS(:, 1) = TorCS(:, 1);
     TlowCS(:, 3) = TorCS(:, 3);
     TlowCS(:, 2) = unitvec(cross(TlowCS(:, 3), TlowCS(:, 1)));
-
-    ShCS(:, 1) = TorCS(:, 1);
+    
+    % ShCS -> y-x-z rotation, x: cross(y, z), y: proximal y, z: distal z
+    ShCS(:, 2) = TorCS(:, 2);
     ShCS(:, 3) = UaCS(:, 3);
-    ShCS(:, 2) = unitvec(cross(ShCS(:, 3), ShCS(:, 1)));
+    ShCS(:, 1) = unitvec(cross(ShCS(:, 2), ShCS(:, 3)));
 
     ElCS(:, 1) = UaCS(:, 1);
     ElCS(:, 3) = FaCS(:, 3);

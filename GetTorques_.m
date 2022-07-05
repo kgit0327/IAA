@@ -80,25 +80,25 @@ function [INT, GRA, Itheta] = GetTorques_
     HdCS = R(th31, th32, th33); %*FaCS;
     RaCS = R(th41, th42, th43); %*HdCS;
     
-    % Define joint coordinate system, x: distal z, y: cross(z, x), z: proximal x 
-    TlowCS(:, 1) = TorCS(:, 3);
-    TlowCS(:, 3) = TorCS(:, 1);
+    % Define joint coordinate system, x: proximal x, y: cross(z, x), z: distal z 
+    TlowCS(:, 1) = TorCS(:, 1);
+    TlowCS(:, 3) = TorCS(:, 3);
     TlowCS(:, 2) = unitvec(cross(TlowCS(:, 3), TlowCS(:, 1)));
 
-    ShCS(:, 1) = UaCS(:, 3);
-    ShCS(:, 3) = TorCS(:, 1);
+    ShCS(:, 1) = TorCS(:, 1);
+    ShCS(:, 3) = UaCS(:, 3);
     ShCS(:, 2) = unitvec(cross(ShCS(:, 3), ShCS(:, 1)));
 
-    ElCS(:, 1) = FaCS(:, 3);
-    ElCS(:, 3) = UaCS(:, 1);
+    ElCS(:, 1) = UaCS(:, 1);
+    ElCS(:, 3) = FaCS(:, 3);
     ElCS(:, 2) = unitvec(cross(ElCS(:, 3), ElCS(:, 1)));
 
-    WrCS(:, 1) = HdCS(:, 3);
-    WrCS(:, 3) = FaCS(:, 1);
+    WrCS(:, 1) = FaCS(:, 1);
+    WrCS(:, 3) = HdCS(:, 3);
     WrCS(:, 2) = unitvec(cross(WrCS(:, 3), WrCS(:, 1)));
 
-    RhCS(:, 1) = RaCS(:, 3);
-    RhCS(:, 3) = HdCS(:, 1);
+    RhCS(:, 1) = HdCS(:, 1);
+    RhCS(:, 3) = RaCS(:, 3);
     RhCS(:, 2) = unitvec(cross(RhCS(:, 3), RhCS(:, 1)));
 
     fprintf('Coordinate system defined\t')

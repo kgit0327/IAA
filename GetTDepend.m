@@ -34,24 +34,24 @@ function tDeps = GetTDepend(ExperimentDatas, iData)
     end
 
     th0(2, :) = asin(reshape(TorCS(3, 1, :), [1 NUM_FRAME]));
-    th0(1, :) = -asin(reshape(TorCS(3, 2, :), [1 NUM_FRAME]) ./ cos(th0(2, :)));
-    th0(3, :) = -asin(reshape(TorCS(2, 1, :), [1 NUM_FRAME]) ./ cos(th0(2, :)));
+    th0(1, :) = acos(reshape(TorCS(3, 3, :), [1 NUM_FRAME]) ./ cos(th0(2, :)));
+    th0(3, :) = acos(reshape(TorCS(1, 1, :), [1 NUM_FRAME]) ./ cos(th0(2, :)));
     
     th1(2, :) = asin(reshape(UaCS(3, 1, :), [1 NUM_FRAME]));
-    th1(1, :) = -asin(reshape(UaCS(3, 2, :), [1 NUM_FRAME]) ./ cos(th1(2, :)));
-    th1(3, :) = -asin(reshape(UaCS(2, 1, :), [1 NUM_FRAME]) ./ cos(th1(2, :)));
+    th1(1, :) = acos(reshape(UaCS(3, 3, :), [1 NUM_FRAME]) ./ cos(th1(2, :)));
+    th1(3, :) = acos(reshape(UaCS(1, 1, :), [1 NUM_FRAME]) ./ cos(th1(2, :)));
     
     th2(2, :) = asin(reshape(FaCS(3, 1, :), [1 NUM_FRAME]));
-    th2(1, :) = -asin(reshape(FaCS(3, 2, :), [1 NUM_FRAME]) ./ cos(th2(2, :)));
-    th2(3, :) = -asin(reshape(FaCS(2, 1, :), [1 NUM_FRAME]) ./ cos(th2(2, :)));
+    th2(1, :) = acos(reshape(FaCS(3, 3, :), [1 NUM_FRAME]) ./ cos(th2(2, :)));
+    th2(3, :) = acos(reshape(FaCS(1, 1, :), [1 NUM_FRAME]) ./ cos(th2(2, :)));
     
     th3(2, :) = asin(reshape(HdCS(3, 1, :), [1 NUM_FRAME]));
-    th3(1, :) = -asin(reshape(HdCS(3, 2, :), [1 NUM_FRAME]) ./ cos(th3(2, :)));
-    th3(3, :) = -asin(reshape(HdCS(2, 1, :), [1 NUM_FRAME]) ./ cos(th3(2, :)));
+    th3(1, :) = acos(reshape(HdCS(3, 3, :), [1 NUM_FRAME]) ./ cos(th3(2, :)));
+    th3(3, :) = acos(reshape(HdCS(1, 1, :), [1 NUM_FRAME]) ./ cos(th3(2, :)));
     
     th4(2, :) = asin(reshape(RaCS(3, 1, :), [1 NUM_FRAME]));
-    th4(1, :) = -asin(reshape(RaCS(3, 2, :), [1 NUM_FRAME]) ./ cos(th4(2, :)));
-    th4(3, :) = -asin(reshape(RaCS(2, 1, :), [1 NUM_FRAME]) ./ cos(th4(2, :)));
+    th4(1, :) = acos(reshape(RaCS(3, 3, :), [1 NUM_FRAME]) ./ cos(th4(2, :)));
+    th4(3, :) = acos(reshape(RaCS(1, 1, :), [1 NUM_FRAME]) ./ cos(th4(2, :)));
 
 
 

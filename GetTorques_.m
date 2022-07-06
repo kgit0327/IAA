@@ -65,9 +65,17 @@ function [INT, GRA, Itheta] = GetTorques_
     %%
     tic
     syms th_ [3 1]
-    R1(th_) = [1,0,0;0,cos(th_1),-sin(th_1);0,sin(th_1),cos(th_1)];
-    R2(th_) = [cos(th_2),0,sin(th_2);0,1,0;-sin(th_2),0,cos(th_2)];
-    R3(th_) = [cos(th_3),-sin(th_3),0;sin(th_3),cos(th_3),0;0,0,1];
+    R1(th_) = [1,          0,         0; ...
+               0,  cos(th_1), sin(th_1); ...
+               0, -sin(th_1), cos(th_1)];
+
+    R2(th_) = [ cos(th_2), 0, -sin(th_2); ...
+                        0, 1,          0; ...
+                sin(th_2), 0,  cos(th_2)];
+
+    R3(th_) = [ cos(th_3),  sin(th_3), 0; ...
+               -sin(th_3),  cos(th_3), 0; ...
+                        0,          0, 1];
     R(th_) = R3*R2*R1;
    
     % Define segment coordinate system

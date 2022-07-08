@@ -1,13 +1,15 @@
 function [INT, GRA, Itheta] = GetTorques_
     tic
-    syms m0 m1 m2 m3 m4 
+    syms m0l m0u m1 m2 m3 m4 
     syms g [3 1] 
-    syms I0 [1 3] 
+    syms I0l [1 3]
+    syms I0u [1 3]
     syms I1 [1 3] 
     syms I2 [1 3] 
     syms I3 [1 3] 
     syms I4 [1 3] 
-    syms th0(t) [3 1]
+    syms th0l(t) [3 1]
+    syms th0u(t) [3 1]
     syms th1(t) [3 1]
     syms th2(t) [3 1]
     syms th3(t) [3 1]
@@ -37,31 +39,6 @@ function [INT, GRA, Itheta] = GetTorques_
     fprintf('syms Done\t')
     toc
 
-
-    %% from define_positions
-
-    syms_Replaced = [
-    th0 diff(th0, t) diff(th0, t, t), ...
-    th1 diff(th1, t) diff(th1, t, t), ...
-    th2 diff(th2, t) diff(th2, t, t), ...
-    th3 diff(th3, t) diff(th3, t, t), ...
-    th4 diff(th4, t) diff(th4, t, t), ...
-    r_tor diff(r_tor, t) diff(r_tor, t, t), ...
-    ];
-
-    syms_Replacing = [
-        th0_ thd0_ th2d0_ ...
-        th1_ thd1_ th2d1_ ...
-        th2_ thd2_ th2d2_ ...
-        th3_ thd3_ th2d3_ ...
-        th4_ thd4_ th2d4_ ...
-        r_tor_ v_tor_ a_tor_ ...
-        ];
-    
-    subs_pre = @(input) subs( input, syms_Replaced, syms_Replacing);
-%     simplify_subs_pre = @(input) simplify( subs_pre( input ) );
-
-    
     %%
     tic
     syms th_ [3 1]
@@ -79,22 +56,23 @@ function [INT, GRA, Itheta] = GetTorques_
     R(th_) = R3*R2*R1;
    
     % Define segment coordinate system
-    TorCS = R(th01, th02, th03);
+    lTorCS = R(th0l1, th0l2, th0l3);
     % x0 = TorCS(:, 1);
     % y0 = TorCS(:, 2);
     % z0 = TorCS(:, 3);
-    UaCS = R(th11, th12, th13); %*TorCS;
-    FaCS = R(th21, th22, th23); %*UaCS;
-    HdCS = R(th31, th32, th33); %*FaCS;
-    RaCS = R(th41, th42, th43); %*HdCS;
+    uTorCS = R(th0u1, th0u2, th0u3);
+    UaCS = R(th11, th12, th13);
+    FaCS = R(th21, th22, th23);
+    HdCS = R(th31, th32, th33);
+    RaCS = R(th41, th42, th43);
     
     % Define joint coordinate system, x: proximal x, y: cross(z, x), z: distal z 
-    TlowCS(:, 1) = TorCS(:, 1);
-    TlowCS(:, 3) = TorCS(:, 3);
-    TlowCS(:, 2) = unitvec(cross(TlowCS(:, 3), TlowCS(:, 1)));
+    TrCS(:, 1) = lTorCS(:, 1);
+    TrCS(:, 3) = uTorCS(:, 3);
+    TrCS(:, 2) = unitvec(cross(TrCS(:, 3), TrCS(:, 1)));
     
     % ShCS -> y-x-z rotation, x: cross(y, z), y: proximal y, z: distal z
-    ShCS(:, 2) = TorCS(:, 2);
+    ShCS(:, 2) = TrCS(:, 2);
     ShCS(:, 3) = UaCS(:, 3);
     ShCS(:, 1) = unitvec(cross(ShCS(:, 2), ShCS(:, 3)));
 
@@ -114,52 +92,57 @@ function [INT, GRA, Itheta] = GetTorques_
     toc
 
     tic
-    om0 = dot(diff(TorCS(:, 2), t), TorCS(:, 3)).*TorCS(:, 1) ...
-         + dot(diff(TorCS(:, 3), t), TorCS(:, 1)).*TorCS(:, 2) ...
-         + dot(diff(TorCS(:, 1), t), TorCS(:, 2)).*TorCS(:, 3);
 
-    om1 = dot(diff(UaCS(:, 2), t), UaCS(:, 3)).*UaCS(:, 1) ...
-         + dot(diff(UaCS(:, 3), t), UaCS(:, 1)).*UaCS(:, 2) ...
-         + dot(diff(UaCS(:, 1), t), UaCS(:, 2)).*UaCS(:, 3);
+    om0l = dot(diff(lTorCS(:, 2), t), lTorCS(:, 3)) .* lTorCS(:, 1) ...
+         + dot(diff(lTorCS(:, 3), t), lTorCS(:, 1)) .* lTorCS(:, 2) ...
+         + dot(diff(lTorCS(:, 1), t), lTorCS(:, 2)) .* lTorCS(:, 3);
 
-    om2 = dot(diff(FaCS(:, 2), t), FaCS(:, 3)).*FaCS(:, 1) ...
-         + dot(diff(FaCS(:, 3), t), FaCS(:, 1)).*FaCS(:, 2) ...
-         + dot(diff(FaCS(:, 1), t), FaCS(:, 2)).*FaCS(:, 3);
+    om0u = dot(diff(uTorCS(:, 2), t), uTorCS(:, 3)) .* uTorCS(:, 1) ...
+         + dot(diff(uTorCS(:, 3), t), uTorCS(:, 1)) .* uTorCS(:, 2) ...
+         + dot(diff(uTorCS(:, 1), t), uTorCS(:, 2)) .* uTorCS(:, 3);
 
-    om3 = dot(diff(HdCS(:, 2), t), HdCS(:, 3)).*HdCS(:, 1) ...
-         + dot(diff(HdCS(:, 3), t), HdCS(:, 1)).*HdCS(:, 2) ...
-         + dot(diff(HdCS(:, 1), t), HdCS(:, 2)).*HdCS(:, 3);
+    om1  = dot(diff(UaCS(:, 2), t), UaCS(:, 3)) .* UaCS(:, 1) ...
+         + dot(diff(UaCS(:, 3), t), UaCS(:, 1)) .* UaCS(:, 2) ...
+         + dot(diff(UaCS(:, 1), t), UaCS(:, 2)) .* UaCS(:, 3);
 
-    om4 = dot(diff(RaCS(:, 2), t), RaCS(:, 3)).*RaCS(:, 1) ...
-         + dot(diff(RaCS(:, 3), t), RaCS(:, 1)).*RaCS(:, 2) ...
-         + dot(diff(RaCS(:, 1), t), RaCS(:, 2)).*RaCS(:, 3);
+    om2  = dot(diff(FaCS(:, 2), t), FaCS(:, 3)) .* FaCS(:, 1) ...
+         + dot(diff(FaCS(:, 3), t), FaCS(:, 1)) .* FaCS(:, 2) ...
+         + dot(diff(FaCS(:, 1), t), FaCS(:, 2)) .* FaCS(:, 3);
 
-    Om0 = dot(diff(TlowCS(:, 2), t), TlowCS(:, 3)).*TlowCS(:, 1) ...
-         + dot(diff(TlowCS(:, 3), t), TlowCS(:, 1)).*TlowCS(:, 2) ...
-         + dot(diff(TlowCS(:, 1), t), TlowCS(:, 2)).*TlowCS(:, 3);
+    om3  = dot(diff(HdCS(:, 2), t), HdCS(:, 3)) .* HdCS(:, 1) ...
+         + dot(diff(HdCS(:, 3), t), HdCS(:, 1)) .* HdCS(:, 2) ...
+         + dot(diff(HdCS(:, 1), t), HdCS(:, 2)) .* HdCS(:, 3);
 
-    Om1 = dot(diff(ShCS(:, 2), t), ShCS(:, 3)).*ShCS(:, 1) ...
-         + dot(diff(ShCS(:, 3), t), ShCS(:, 1)).*ShCS(:, 2) ...
-         + dot(diff(ShCS(:, 1), t), ShCS(:, 2)).*ShCS(:, 3);
+    om4  = dot(diff(RaCS(:, 2), t), RaCS(:, 3)) .* RaCS(:, 1) ...
+         + dot(diff(RaCS(:, 3), t), RaCS(:, 1)) .* RaCS(:, 2) ...
+         + dot(diff(RaCS(:, 1), t), RaCS(:, 2)) .* RaCS(:, 3);
 
-    Om2 = dot(diff(ElCS(:, 2), t), ElCS(:, 3)).*ElCS(:, 1) ...
-         + dot(diff(ElCS(:, 3), t), ElCS(:, 1)).*ElCS(:, 2) ...
-         + dot(diff(ElCS(:, 1), t), ElCS(:, 2)).*ElCS(:, 3);
+    Om0  = dot(diff(TrCS(:, 2), t), TrCS(:, 3)) .* TrCS(:, 1) ...
+         + dot(diff(TrCS(:, 3), t), TrCS(:, 1)) .* TrCS(:, 2) ...
+         + dot(diff(TrCS(:, 1), t), TrCS(:, 2)) .* TrCS(:, 3);
 
-    Om3 = dot(diff(WrCS(:, 2), t), WrCS(:, 3)).*WrCS(:, 1) ...
-         + dot(diff(WrCS(:, 3), t), WrCS(:, 1)).*WrCS(:, 2) ...
-         + dot(diff(WrCS(:, 1), t), WrCS(:, 2)).*WrCS(:, 3);
+    Om1  = dot(diff(ShCS(:, 2), t), ShCS(:, 3)) .* ShCS(:, 1) ...
+         + dot(diff(ShCS(:, 3), t), ShCS(:, 1)) .* ShCS(:, 2) ...
+         + dot(diff(ShCS(:, 1), t), ShCS(:, 2)) .* ShCS(:, 3);
+
+    Om2  = dot(diff(ElCS(:, 2), t), ElCS(:, 3)) .* ElCS(:, 1) ...
+         + dot(diff(ElCS(:, 3), t), ElCS(:, 1)) .* ElCS(:, 2) ...
+         + dot(diff(ElCS(:, 1), t), ElCS(:, 2)) .* ElCS(:, 3);
+
+    Om3  = dot(diff(WrCS(:, 2), t), WrCS(:, 3)) .* WrCS(:, 1) ...
+         + dot(diff(WrCS(:, 3), t), WrCS(:, 1)) .* WrCS(:, 2) ...
+         + dot(diff(WrCS(:, 1), t), WrCS(:, 2)) .* WrCS(:, 3);
     
-    Om4 = dot(diff(RhCS(:, 2), t), RhCS(:, 3)).*RhCS(:, 1) ...
-         + dot(diff(RhCS(:, 3), t), RhCS(:, 1)).*RhCS(:, 2) ...
-         + dot(diff(RhCS(:, 1), t), RhCS(:, 2)).*RhCS(:, 3);
+    Om4  = dot(diff(RhCS(:, 2), t), RhCS(:, 3)) .* RhCS(:, 1) ...
+         + dot(diff(RhCS(:, 3), t), RhCS(:, 1)) .* RhCS(:, 2) ...
+         + dot(diff(RhCS(:, 1), t), RhCS(:, 2)) .* RhCS(:, 3);
 
     fprintf('om, Om calculated\t')
     toc
 
     tic
-    thd0 = om0;
-    thd1 = om1 - om0;
+    thd0 = om0u - om0l;
+    thd1 = om1 - om0u;
     thd2 = om2 - om1;
     thd3 = om3 - om2;
     thd4 = om4 - om3;
@@ -170,19 +153,19 @@ function [INT, GRA, Itheta] = GetTorques_
     th2d3 = diff(thd3, t) - cross(Om3, thd3);
     th2d4 = diff(thd4, t) - cross(Om4, thd4);
 
-    I_lcs0 = diag(I0);
+    I_lcs0u = diag(I0u);
     I_lcs1 = diag(I1);
     I_lcs2 = diag(I2);
     I_lcs3 = diag(I3);
     I_lcs4 = diag(I4);
 
-    I_gcs0 = TorCS*I_lcs0*TorCS.';
-    I_gcs1 = UaCS*I_lcs1*UaCS.';
-    I_gcs2 = FaCS*I_lcs2*FaCS.';
-    I_gcs3 = HdCS*I_lcs3*HdCS.';
-    I_gcs4 = RaCS*I_lcs4*RaCS.';
+    I_gcs0 = uTorCS * I_lcs0u * uTorCS.';
+    I_gcs1 = UaCS * I_lcs1 * UaCS.';
+    I_gcs2 = FaCS * I_lcs2 * FaCS.';
+    I_gcs3 = HdCS * I_lcs3 * HdCS.';
+    I_gcs4 = RaCS * I_lcs4 * RaCS.';
 
-    omd0 = th2d0+cross(Om0, thd0);
+    omd0 = th2d0 + cross(Om0, thd0);
 
     fprintf('theta2dot defined\t')
     toc
@@ -193,18 +176,24 @@ function [INT, GRA, Itheta] = GetTorques_
     A3 = A2+cross(Om3, thd3);
     A4 = A3+cross(Om4, thd4);
     
-    L0 = l0.*TorCS(:, 3);
-    Lg0 = 0.428*l0.*TorCS(:, 3);
-    L1 = l1.*(-UaCS(:, 3));
-    Lg1 = L1.*0.529;
-    L2 = l2.*(-FaCS(:, 3));
-    Lg2 = L2.*0.415;
-    L3 = l3.*(-HdCS(:, 3));
-    Lg3 = L3.*0.891;
-    Lg4 = 0.519.*l4.*(-RaCS(:, 3));
-    
-    B0 = cross(om0, cross(om0, Lg0));
-    Bg0 = cross(om0, cross(om0, L0));
+    L0 = l0 .* uTorCS(:, 3);
+    L1 = l1 .* (-UaCS(:, 3));
+    L2 = l2 .* (-FaCS(:, 3));
+    L3 = l3 .* (-HdCS(:, 3));
+    L4 = l4 .* (-RaCS(:, 3));
+
+    % percentage of mass? naibunntenn
+    % value from sports biomechanics20
+
+    Lg0 = L0 .* 0.428;
+    Lg1 = L1 .* 0.529;
+    Lg2 = L2 .* 0.415;
+    Lg3 = L3 .* 0.891;
+    Lg4 = L4 .* 0.519;
+
+
+    B0 = cross(om0u, cross(om0u, L0));
+    Bg0 = cross(om0u, cross(om0u, Lg0));
     B1 = cross(om1, cross(om1, L1));
     Bg1 = cross(om1, cross(om1, Lg1));
     B2 = cross(om2, cross(om2, L2));
@@ -250,7 +239,7 @@ function [INT, GRA, Itheta] = GetTorques_
     F3 = m3*ag3-m3*g+F4;
     F2 = m2*ag2-m2*g+F3;
     F1 = m1*ag1-m1*g+F2;
-    F0 = m0*ag0-m0*g+F1;
+    F0 = m0u*ag0-m0u*g+F1;
 
     fprintf('F defined\t')
     toc
@@ -260,8 +249,30 @@ function [INT, GRA, Itheta] = GetTorques_
     RJT3 = I_gcs3*omd3+cross(om3, (I_gcs3 * om3))+RJT4-cross(-Lg3, F3)-cross((L3-Lg3), -F4);
     RJT2 = I_gcs2*omd2+cross(om2, (I_gcs2 * om2))+RJT3-cross(-Lg2, F2)-cross((L2-Lg2), -F3);
     RJT1 = I_gcs1*omd1+cross(om1, (I_gcs1 * om1))+RJT2-cross(-Lg1, F1)-cross((L1-Lg1), -F2);
-    RJT0 = I_gcs0*omd0+cross(om0, (I_gcs0 * om0))+RJT1-cross(-Lg0, F0)-cross((L0-Lg0), -F1);
+    RJT0 = I_gcs0*omd0+cross(om0u, (I_gcs0 * om0u))+RJT1-cross(-Lg0, F0)-cross((L0-Lg0), -F1);
 
+
+    syms_Replaced = [
+        th0u,    om0u - om0l, diff(thd0, t) - cross(Om0, thd0); ...
+         th1,     om1 - om0u, diff(thd1, t) - cross(Om1, thd1); ...
+         th2,      om2 - om1, diff(thd2, t) - cross(Om2, thd2); ...
+         th3,      om3 - om2, diff(thd3, t) - cross(Om3, thd3); ...
+         th4,      om4 - om3, diff(thd4, t) - cross(Om4, thd4); ...
+       r_tor, diff(r_tor, t), diff(r_tor, t, t) ...
+    ];
+
+    syms_Replacing = [
+        th0_, thd0_, th2d0_; ...
+        th1_, thd1_, th2d1_; ...
+        th2_, thd2_, th2d2_; ...
+        th3_, thd3_, th2d3_; ...
+        th4_, thd4_, th2d4_; ...
+        r_tor_, v_tor_, a_tor_;...
+        ];
+    
+    subs_pre = @(input) subs( input, syms_Replaced, syms_Replacing);
+
+%     subs_ = 
 
     RJT0 = formula(subs_pre(RJT0));
     RJT1 = formula(subs_pre(RJT1));

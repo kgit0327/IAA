@@ -39,7 +39,7 @@ function segdat = GetRacketSegmentData(ExperimentDatas, iData)
         R = [Xaxis, Yaxis, Zaxis];
         Var(iFrame).R = R;
         
-        Racket(iData).cg(:, iFrame) = Racket(iData).Position(4:6, iFrame)+0.35*Zaxis;
+        Racket(iData).cg(:, iFrame) = Racket(iData).Position(4:6, iFrame) + 0.35 * Zaxis;
         
     end
     
@@ -95,26 +95,26 @@ function segdat = GetRacketSegmentData(ExperimentDatas, iData)
 
         %-------
         zrhR = R(:, 3);
-        xrhR = ExperimentDatas(iData).SCS(1).Var(iFrame).R(:,1);
-        yrhR = unitvec(cross(zrhR,xrhR));
-              
+        yrhR = ExperimentDatas(iData).SCS(1).Var(iFrame).R(:, 2);
+        xrhR = cross(yrhR, zrhR);
+      
         R_JCS = [xrhR yrhR zrhR];
         
-        tmp = (ExperimentDatas(iData).SCS(1).Var(iFrame).R)\unitvec(cross(zrhR,xrhR));
-        JAtmp.rhz(iFrame) = atan2(tmp(3),tmp(2));
-%         JAtmp.rhz = modifyJA(JAtmp.rhz);
+        %---JA.s(内転 + /外転 - ) 
+        % Rotation axis is vertical to the racket face, towards back side
+        tmp = ExperimentDatas(iData).SCS(1).Var(iFrame).R \ unitvec(cross(yrhR, zrhR));
+        JAtmp.rhAA = -atan2(tmp(3), tmp(1)); %軸が1つ消えて2次元平面で算出可能
         
-        %---JA.sAA--- +AB / -AD
-        tmp = (R_JCS)\unitvec(zrhR);
-        JAtmp.rhy(iFrame) = -atan2(tmp(1),tmp(3));
-%         JAtmp.rhy = modifyJA(JAtmp.rhy);
+        %---JA.s(伸展 + /屈曲 - ) 
+        % Rotation axis is parallel to the racket face, towards down marker
+        tmp = R_JCS \ unitvec(zrhR);
+        JAtmp.rhEF = atan2(tmp(2), tmp(3));
         
-        %---JA.sIER--- +ER / -IR
-        tmp = (R)\unitvec(cross(yrhR,zrhR));
-        JAtmp.rhx(iFrame) = atan2(tmp(2),tmp(1));
-%         JAtmp.rhx = modifyJA(JAtmp.rhx);
+        %---JA.s(内旋 + /外旋 - )
+        tmp = R \ unitvec(cross(yrhR, zrhR));
+        JAtmp.rhIE = -atan2(tmp(2),tmp(1));
 
-        rh_an = [JAtmp.rhz;JAtmp.rhy;JAtmp.rhx];
+        rh_an(1 : 3, iFrame) = [JAtmp.rhAA; JAtmp.rhEF; JAtmp.rhIE];
 
     end
 

@@ -147,11 +147,20 @@ function [INT, GRA, Itheta] = GetTorques_
     thd3 = om3 - om2;
     thd4 = om4 - om3;
 
+    th2d0_jcs = diff(thd0, t) - cross(Om0, thd0);
+    th2d1_jcs = diff(thd1, t) - cross(Om1, thd1);
+    th2d2_jcs = diff(thd2, t) - cross(Om2, thd2);
+    th2d3_jcs = diff(thd3, t) - cross(Om3, thd3);
+    th2d4_jcs = diff(thd4, t) - cross(Om4, thd4);
+
+
     th2d0 = diff(thd0, t) - cross(Om0, thd0);
     th2d1 = diff(thd1, t) - cross(Om1, thd1);
     th2d2 = diff(thd2, t) - cross(Om2, thd2);
     th2d3 = diff(thd3, t) - cross(Om3, thd3);
     th2d4 = diff(thd4, t) - cross(Om4, thd4);
+
+
 
     I_lcs0u = diag(I0u);
     I_lcs1 = diag(I1);

@@ -227,8 +227,8 @@ function [INT, GRA, Itheta] = GetTorques_
     %%
     tic
     omd0l = diff(om0l, t);
-    omd0 = omd0l + th2d0 + A0;
-    omd1  = omd0 + th2d1 + A1;
+    omd0 = omd0l  + th2d0 + A0;
+    omd1  = omd0  + th2d1 + A1;
     omd2  = omd1  + th2d2 + A2;
     omd3  = omd2  + th2d3 + A3;
     omd4  = omd3  + th2d4 + A4;

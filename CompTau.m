@@ -17,12 +17,6 @@ g1 = Constants.g(1);
 g2 = Constants.g(2);
 g3 = Constants.g(3);
 
-l0 = Constants.l(1);
-l1 = Constants.l(2);
-l2 = Constants.l(3);
-l3 = Constants.l(4);
-l4 = Constants.l(5);
-
 m0 = Constants.m(1);
 m1 = Constants.m(2);
 m2 = Constants.m(3);
@@ -47,6 +41,18 @@ I_33 = Constants.I(5, 3);
 I_41 = Constants.I(6, 1);
 I_42 = Constants.I(6, 2);
 I_43 = Constants.I(6, 3);
+
+L0 = tDeps.L0;
+L1 = tDeps.L1;
+L2 = tDeps.L2;
+L3 = tDeps.L3;
+L4 = tDeps.L4;
+
+Lg0 = tDeps.Lg0;
+Lg1 = tDeps.Lg1;
+Lg2 = tDeps.Lg2;
+Lg3 = tDeps.Lg3;
+Lg4 = tDeps.Lg4;
 
 th0 = tDeps.th0;
 th1 = tDeps.th1;

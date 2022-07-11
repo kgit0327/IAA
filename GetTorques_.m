@@ -14,7 +14,6 @@ function [INT, GRA, Itheta] = GetTorques_
     syms th2(t) [3 1]
     syms th3(t) [3 1]
     syms th4(t) [3 1]
-    syms l0 l1 l2 l3 l4 
     syms r_tor(t) [3 1]
 
     syms th0_ om0_ omd0_ [3 1] real
@@ -35,6 +34,16 @@ function [INT, GRA, Itheta] = GetTorques_
     syms r_tor_ [3 1] real
     syms v_tor_ [3 1] real
     syms a_tor_ [3 1] real
+    syms L0 [3 1] real
+    syms L1 [3 1] real
+    syms L2 [3 1] real
+    syms L3 [3 1] real
+    syms L4 [3 1] real
+    syms Lg0 [3 1] real
+    syms Lg1 [3 1] real
+    syms Lg2 [3 1] real
+    syms Lg3 [3 1] real
+    syms Lg4 [3 1] real
 
     fprintf('syms Done\t')
     toc
@@ -147,20 +156,23 @@ function [INT, GRA, Itheta] = GetTorques_
     thd3 = om3 - om2;
     thd4 = om4 - om3;
 
-    th2d0_jcs = diff(thd0, t) - cross(Om0, thd0);
-    th2d1_jcs = diff(thd1, t) - cross(Om1, thd1);
-    th2d2_jcs = diff(thd2, t) - cross(Om2, thd2);
-    th2d3_jcs = diff(thd3, t) - cross(Om3, thd3);
-    th2d4_jcs = diff(thd4, t) - cross(Om4, thd4);
+    thd0_jcs = TrCS \ thd0;
+    thd1_jcs = ShCS \ thd1;
+    thd2_jcs = ELCS \ thd2;
+    thd3_jcs = WrCS \ thd3;
+    thd4_jcs = RhCS \ thd4;
 
+    th2d0_jcs = diff(thd0_jcs, t);
+    th2d1_jcs = diff(thd1_jcs, t);
+    th2d2_jcs = diff(thd2_jcs, t);
+    th2d3_jcs = diff(thd3_jcs, t);
+    th2d4_jcs = diff(thd4_jcs, t);
 
-    th2d0 = diff(thd0, t) - cross(Om0, thd0);
-    th2d1 = diff(thd1, t) - cross(Om1, thd1);
-    th2d2 = diff(thd2, t) - cross(Om2, thd2);
-    th2d3 = diff(thd3, t) - cross(Om3, thd3);
-    th2d4 = diff(thd4, t) - cross(Om4, thd4);
-
-
+    th2d0 = TrCS * th2d0_jcs;
+    th2d1 = ShCS * th2d1_jcs;
+    th2d2 = ELCS * th2d2_jcs;
+    th2d3 = WrCS * th2d3_jcs;
+    th2d4 = RhCS * th2d4_jcs;
 
     I_lcs0u = diag(I0u);
     I_lcs1 = diag(I1);
@@ -174,33 +186,18 @@ function [INT, GRA, Itheta] = GetTorques_
     I_gcs3 = HdCS * I_lcs3 * HdCS.';
     I_gcs4 = RaCS * I_lcs4 * RaCS.';
 
-    omd0 = th2d0 + cross(Om0, thd0);
+    
 
     fprintf('theta2dot defined\t')
     toc
     
     tic
-    A1 = omd0+cross(Om1, thd1);
-    A2 = A1+cross(Om2, thd2);
-    A3 = A2+cross(Om3, thd3);
-    A4 = A3+cross(Om4, thd4);
+    A0 = cross(Om0, thd0);
+    A1 = cross(Om1, thd1);
+    A2 = cross(Om2, thd2);
+    A3 = cross(Om3, thd3);
+    A4 = cross(Om4, thd4);
     
-    L0 = l0 .* uTorCS(:, 3);
-    L1 = l1 .* (-UaCS(:, 3));
-    L2 = l2 .* (-FaCS(:, 3));
-    L3 = l3 .* (-HdCS(:, 3));
-    L4 = l4 .* (-RaCS(:, 3));
-
-    % percentage of mass? naibunntenn
-    % value from sports biomechanics20
-
-    Lg0 = L0 .* 0.428;
-    Lg1 = L1 .* 0.529;
-    Lg2 = L2 .* 0.415;
-    Lg3 = L3 .* 0.891;
-    Lg4 = L4 .* 0.519;
-
-
     B0 = cross(om0u, cross(om0u, L0));
     Bg0 = cross(om0u, cross(om0u, Lg0));
     B1 = cross(om1, cross(om1, L1));
@@ -221,10 +218,12 @@ function [INT, GRA, Itheta] = GetTorques_
     
     %%
     tic
-    omd1 = th2d1+A1;
-    omd2 = th2d1+th2d2+A2;
-    omd3 = th2d1+th2d2+th2d3+A3;
-    omd4 = th2d1+th2d2+th2d3+th2d4+A4;
+    omd0l = diff(om0l, t);
+    omd0u = omd0l + th2d0 + A0;
+    omd1  = omd0u + th2d1 + A1;
+    omd2  = omd1  + th2d2 + A2;
+    omd3  = omd2  + th2d3 + A3;
+    omd4  = omd3  + th2d4 + A4;
 
     a0 = diff(diff(r_tor, t), t);
     a1 = a0+cross(omd0, L0)+B0;
@@ -254,10 +253,10 @@ function [INT, GRA, Itheta] = GetTorques_
     toc
     
     tic
-    RJT4 = I_gcs4*omd4+cross(om4, (I_gcs4 * om4))     -cross(-Lg4, F4);
-    RJT3 = I_gcs3*omd3+cross(om3, (I_gcs3 * om3))+RJT4-cross(-Lg3, F3)-cross((L3-Lg3), -F4);
-    RJT2 = I_gcs2*omd2+cross(om2, (I_gcs2 * om2))+RJT3-cross(-Lg2, F2)-cross((L2-Lg2), -F3);
-    RJT1 = I_gcs1*omd1+cross(om1, (I_gcs1 * om1))+RJT2-cross(-Lg1, F1)-cross((L1-Lg1), -F2);
+    RJT4 = I_gcs4*omd4+cross(om4, (I_gcs4 * om4))       -cross(-Lg4, F4);
+    RJT3 = I_gcs3*omd3+cross(om3, (I_gcs3 * om3))  +RJT4-cross(-Lg3, F3)-cross((L3-Lg3), -F4);
+    RJT2 = I_gcs2*omd2+cross(om2, (I_gcs2 * om2))  +RJT3-cross(-Lg2, F2)-cross((L2-Lg2), -F3);
+    RJT1 = I_gcs1*omd1+cross(om1, (I_gcs1 * om1))  +RJT2-cross(-Lg1, F1)-cross((L1-Lg1), -F2);
     RJT0 = I_gcs0*omd0+cross(om0u, (I_gcs0 * om0u))+RJT1-cross(-Lg0, F0)-cross((L0-Lg0), -F1);
 
 

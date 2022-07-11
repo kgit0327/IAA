@@ -7,35 +7,56 @@ function tDeps = GetTDepend(ExperimentDatas, iData)
     SCS = ExperimentDatas(iData).SCS;
     Unit = ExperimentDatas(iData).Unit;
 
-    TorCS = nan(3, 3, NUM_FRAME);
+    lTorCS = nan(3, 3, NUM_FRAME);
+    uTorCS = nan(3, 3, NUM_FRAME);
     UaCS = nan(3, 3, NUM_FRAME);
     FaCS = nan(3, 3, NUM_FRAME);
     HdCS = nan(3, 3, NUM_FRAME);
     RaCS = nan(3, 3, NUM_FRAME);
 
-    TlowCS = nan(3, 3, NUM_FRAME);
+    TrCS = nan(3, 3, NUM_FRAME);
     ShCS = nan(3, 3, NUM_FRAME);
     ElCS = nan(3, 3, NUM_FRAME);
     WrCS = nan(3, 3, NUM_FRAME);
     RhCS = nan(3, 3, NUM_FRAME);
 
     for iFrame = 1 : NUM_FRAME
-        TorCS(:, :, iFrame) = SCS(14).Var(iFrame).R; % left, back, up
+        lTorCS(:, :, iFrame) = SCS(14).Var(iFrame).R; % left, back, up
+        uTorCS(:, :, iFrame) = SCS(15).Var(iFrame).R;
         UaCS(:, :, iFrame) = SCS(3).Var(iFrame).R; % out-in, z X x, ua long
         FaCS(:, :, iFrame) = SCS(2).Var(iFrame).R; % rad-ul, z X x, fa long
         HdCS(:, :, iFrame) = SCS(1).Var(iFrame).R; % rad-ul, z X x, hd long
         RaCS(:, :, iFrame) = RacketSegdat.Var(iFrame).R; 
 
-        TlowCS(:, :, iFrame) = Unit(5).JCS(2).Var(iFrame).R;
+        TrCS(:, :, iFrame) = Unit(5).JCS(2).Var(iFrame).R;
         ShCS(:, :, iFrame) = Unit(1).JCS(3).Var(iFrame).R;
         ElCS(:, :, iFrame) = Unit(1).JCS(2).Var(iFrame).R;
         WrCS(:, :, iFrame) = Unit(1).JCS(1).Var(iFrame).R;
         RhCS(:, :, iFrame) = RacketSegdat.Var(iFrame).R;
     end
 
-    th0(2, :) = asin(reshape(TorCS(3, 1, :), [1 NUM_FRAME]));
-    th0(1, :) = acos(reshape(TorCS(3, 3, :), [1 NUM_FRAME]) ./ cos(th0(2, :)));
-    th0(3, :) = acos(reshape(TorCS(1, 1, :), [1 NUM_FRAME]) ./ cos(th0(2, :)));
+    ri = ExperimentDatas(iData).n.ribC;
+    sh = ExperimentDatas(iData).n.shR;
+    el = ExperimentDatas(iData).n.elbR;
+    wr = ExperimentDatas(iData).n.wrR;
+    rh = RacketSegdat.n(22:24, :);
+    to = ExperimentDatas(iData).n.Top;
+
+    tDeps.L0 = sh - ri;
+    tDeps.L1 = el - sh;
+    tDeps.L2 = wr - el;
+    tDeps.L3 = rh - wr;
+    tDeps.L4 = to - rh;
+
+    tDeps.Lg0 = ExperimentDatas(iData).cgdat(14).cg - ri;
+    tDeps.Lg1 = ExperimentDatas(iData).cgdat(3).cg - sh;
+    tDeps.Lg2 = ExperimentDatas(iData).cgdat(2).cg - el;
+    tDeps.Lg3 = ExperimentDatas(iData).cgdat(1).cg - wr;
+    tDeps.Lg4 = RacketSegdat.cg - rh;   
+
+    th0(2, :) = asin(reshape(uTorCS(3, 1, :), [1 NUM_FRAME]));
+    th0(1, :) = acos(reshape(uTorCS(3, 3, :), [1 NUM_FRAME]) ./ cos(th0(2, :)));
+    th0(3, :) = acos(reshape(uTorCS(1, 1, :), [1 NUM_FRAME]) ./ cos(th0(2, :)));
     
     th1(2, :) = asin(reshape(UaCS(3, 1, :), [1 NUM_FRAME]));
     th1(1, :) = acos(reshape(UaCS(3, 3, :), [1 NUM_FRAME]) ./ cos(th1(2, :)));
@@ -55,22 +76,29 @@ function tDeps = GetTDepend(ExperimentDatas, iData)
 
 
 
-    dTorCS = GetDiffR(TorCS);
+    duTorCS = GetDiffR(uTorCS);
+    dlTorCS = GetDiffR(lTorCS);
     dUaCS = GetDiffR(UaCS);
     dFaCS = GetDiffR(FaCS);
     dHdCS = GetDiffR(HdCS);
     dRaCS = GetDiffR(RaCS);
     
-    dTlowCS = GetDiffR(TlowCS);
+    dTrCS = GetDiffR(TrCS);
     dShCS = GetDiffR(ShCS);
     dElCS = GetDiffR(ElCS);
     dWrCS = GetDiffR(WrCS);
     dRhCS = GetDiffR(RhCS);
     
-    om0 = reshape( ...
-        dot(dTorCS(:, 2, :), TorCS(:, 3, :)).*TorCS(:, 1, :) ...
-         + dot(dTorCS(:, 3, :), TorCS(:, 1, :)).*TorCS(:, 2, :) ...
-         + dot(dTorCS(:, 1, :), TorCS(:, 2, :)).*TorCS(:, 3, :), ...
+    om0l = reshape( ...
+        dot(dlTorCS(:, 2, :), lTorCS(:, 3, :)).*lTorCS(:, 1, :) ...
+         + dot(dlTorCS(:, 3, :), lTorCS(:, 1, :)).*lTorCS(:, 2, :) ...
+         + dot(dlTorCS(:, 1, :), lTorCS(:, 2, :)).*lTorCS(:, 3, :), ...
+         [3 NUM_FRAME]);
+
+    om0u = reshape( ...
+        dot(duTorCS(:, 2, :), uTorCS(:, 3, :)).*uTorCS(:, 1, :) ...
+         + dot(duTorCS(:, 3, :), uTorCS(:, 1, :)).*uTorCS(:, 2, :) ...
+         + dot(duTorCS(:, 1, :), uTorCS(:, 2, :)).*uTorCS(:, 3, :), ...
          [3 NUM_FRAME]);
     
     om1 = reshape( ...
@@ -98,9 +126,9 @@ function tDeps = GetTDepend(ExperimentDatas, iData)
          [3 NUM_FRAME]);
     
     Om0 = reshape( ...
-        dot(dTlowCS(:, 2, :), TlowCS(:, 3, :)).*TlowCS(:, 1, :) ...
-         + dot(dTlowCS(:, 3, :), TlowCS(:, 1, :)).*TlowCS(:, 2, :) ...
-         + dot(dTlowCS(:, 1, :), TlowCS(:, 2, :)).*TlowCS(:, 3, :), ...
+        dot(dTrCS(:, 2, :), TrCS(:, 3, :)).*TrCS(:, 1, :) ...
+         + dot(dTrCS(:, 3, :), TrCS(:, 1, :)).*TrCS(:, 2, :) ...
+         + dot(dTrCS(:, 1, :), TrCS(:, 2, :)).*TrCS(:, 3, :), ...
          [3 NUM_FRAME]);
     
     Om1 = reshape( ...
@@ -128,8 +156,8 @@ function tDeps = GetTDepend(ExperimentDatas, iData)
          [3 NUM_FRAME]);
     
 
-    thd0 = om0;
-    thd1 = om1 - om0;
+    thd0 = om0u - om0l;
+    thd1 = om1 - om0u;
     thd2 = om2 - om1;
     thd3 = om3 - om2;
     thd4 = om4 - om3;

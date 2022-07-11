@@ -161,7 +161,7 @@ function [INT, GRA, Itheta] = GetTorques_
     tic
     thd0_jcs = TrCS \ thd0;
     thd1_jcs = ShCS \ thd1;
-    thd2_jcs = ELCS \ thd2;
+    thd2_jcs = ElCS \ thd2;
     thd3_jcs = WrCS \ thd3;
     thd4_jcs = RhCS \ thd4;
 

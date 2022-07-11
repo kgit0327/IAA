@@ -233,17 +233,17 @@ function [INT, GRA, Itheta] = GetTorques_
     omd3  = omd2  + th2d3 + A3;
     omd4  = omd3  + th2d4 + A4;
 
-    a0 = diff(diff(r_tor, t), t);
-    a1 = a0+cross(omd0, L0)+B0;
-    a2 = a1+cross(omd1, L1)+B1;
-    a3 = a2+cross(omd2, L2)+B2;
-    a4 = a3+cross(omd3, L3)+B3;
+    a0 = diff(r_tor, t, t);
+    a1 = a0 + cross(omd0u, L0) + B0;
+    a2 = a1 + cross(omd1, L1)  + B1;
+    a3 = a2 + cross(omd2, L2)  + B2;
+    a4 = a3 + cross(omd3, L3)  + B3;
     
-    ag0 = a0+cross(omd0, Lg0)+Bg0;
-    ag1 = a1+cross(omd1, Lg1)+Bg1;
-    ag2 = a2+cross(omd2, Lg2)+Bg2;
-    ag3 = a3+cross(omd3, Lg3)+Bg3;
-    ag4 = a4+cross(omd4, Lg4)+Bg4;
+    ag0 = a0 + cross(omd0, Lg0) + Bg0;
+    ag1 = a1 + cross(omd1, Lg1) + Bg1;
+    ag2 = a2 + cross(omd2, Lg2) + Bg2;
+    ag3 = a3 + cross(omd3, Lg3) + Bg3;
+    ag4 = a4 + cross(omd4, Lg4) + Bg4;
 
     
     fprintf('Other vars defined\t')
@@ -251,21 +251,21 @@ function [INT, GRA, Itheta] = GetTorques_
     
     %%
     tic
-    F4 = m4*ag4-m4*g;
-    F3 = m3*ag3-m3*g+F4;
-    F2 = m2*ag2-m2*g+F3;
-    F1 = m1*ag1-m1*g+F2;
-    F0 = m0u*ag0-m0u*g+F1;
+    F4 = m4  * ag4 - m4  * g;
+    F3 = m3  * ag3 - m3  * g + F4;
+    F2 = m2  * ag2 - m2  * g + F3;
+    F1 = m1  * ag1 - m1  * g + F2;
+    F0 = m0u * ag0 - m0u * g + F1;
 
     fprintf('F defined\t')
     toc
     
     tic
-    RJT4 = I_gcs4*omd4+cross(om4, (I_gcs4 * om4))       -cross(-Lg4, F4);
-    RJT3 = I_gcs3*omd3+cross(om3, (I_gcs3 * om3))  +RJT4-cross(-Lg3, F3)-cross((L3-Lg3), -F4);
-    RJT2 = I_gcs2*omd2+cross(om2, (I_gcs2 * om2))  +RJT3-cross(-Lg2, F2)-cross((L2-Lg2), -F3);
-    RJT1 = I_gcs1*omd1+cross(om1, (I_gcs1 * om1))  +RJT2-cross(-Lg1, F1)-cross((L1-Lg1), -F2);
-    RJT0 = I_gcs0*omd0+cross(om0u, (I_gcs0 * om0u))+RJT1-cross(-Lg0, F0)-cross(L0d, -F1);
+    RJT4 = I_gcs4*omd4+cross(om4,  (I_gcs4 * om4))         - cross(-Lg4, F4);
+    RJT3 = I_gcs3*omd3+cross(om3,  (I_gcs3 * om3))  + RJT4 - cross(-Lg3, F3) - cross((L3-Lg3), -F4);
+    RJT2 = I_gcs2*omd2+cross(om2,  (I_gcs2 * om2))  + RJT3 - cross(-Lg2, F2) - cross((L2-Lg2), -F3);
+    RJT1 = I_gcs1*omd1+cross(om1,  (I_gcs1 * om1))  + RJT2 - cross(-Lg1, F1) - cross((L1-Lg1), -F2);
+    RJT0 = I_gcs0*omd0+cross(om0u, (I_gcs0 * om0u)) + RJT1 - cross(-Lg0, F0) - cross(L0d, -F1);
 
 
     syms_Replaced = [
@@ -287,8 +287,6 @@ function [INT, GRA, Itheta] = GetTorques_
         ];
     
     subs_pre = @(input) subs( input, syms_Replaced, syms_Replacing);
-
-%     subs_ = 
 
     RJT0 = formula(subs_pre(RJT0));
     RJT1 = formula(subs_pre(RJT1));

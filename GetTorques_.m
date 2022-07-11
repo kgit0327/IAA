@@ -1,8 +1,7 @@
 function [INT, GRA, Itheta] = GetTorques_
     tic
-    syms m0l m0u m1 m2 m3 m4 
+    syms m0u m1 m2 m3 m4 
     syms g [3 1] 
-    syms I0l [1 3]
     syms I0u [1 3]
     syms I1 [1 3] 
     syms I2 [1 3] 
@@ -16,11 +15,11 @@ function [INT, GRA, Itheta] = GetTorques_
     syms th4(t) [3 1]
     syms r_tor(t) [3 1]
 
-    syms th0_ om0_ omd0_ [3 1] real
-    syms th1_ om1_ omd1_ [3 1] real
-    syms th2_ om2_ omd2_ [3 1] real
-    syms th3_ om3_ omd3_ [3 1] real
-    syms th4_ om4_ omd4_ [3 1] real
+    syms th0_ [3 1] real
+    syms th1_ [3 1] real
+    syms th2_ [3 1] real
+    syms th3_ [3 1] real
+    syms th4_ [3 1] real
     syms th2d0_ [3 1] real
     syms th2d1_ [3 1] real
     syms th2d2_ [3 1] real
@@ -35,10 +34,10 @@ function [INT, GRA, Itheta] = GetTorques_
     syms v_tor_ [3 1] real
     syms a_tor_ [3 1] real
     syms L0 [3 1] real
+    syms L0d [3 1] real
     syms L1 [3 1] real
     syms L2 [3 1] real
     syms L3 [3 1] real
-    syms L4 [3 1] real
     syms Lg0 [3 1] real
     syms Lg1 [3 1] real
     syms Lg2 [3 1] real
@@ -151,11 +150,15 @@ function [INT, GRA, Itheta] = GetTorques_
 
     tic
     thd0 = om0u - om0l;
-    thd1 = om1 - om0u;
-    thd2 = om2 - om1;
-    thd3 = om3 - om2;
-    thd4 = om4 - om3;
+    thd1 = om1  - om0u;
+    thd2 = om2  -  om1;
+    thd3 = om3  -  om2;
+    thd4 = om4  -  om3;
 
+    fprintf('thd calculated\t')
+    toc
+
+    tic
     thd0_jcs = TrCS \ thd0;
     thd1_jcs = ShCS \ thd1;
     thd2_jcs = ELCS \ thd2;
@@ -174,11 +177,15 @@ function [INT, GRA, Itheta] = GetTorques_
     th2d3 = WrCS * th2d3_jcs;
     th2d4 = RhCS * th2d4_jcs;
 
+    fprintf('th2d caluculated\t')
+    toc
+
+    tic
     I_lcs0u = diag(I0u);
-    I_lcs1 = diag(I1);
-    I_lcs2 = diag(I2);
-    I_lcs3 = diag(I3);
-    I_lcs4 = diag(I4);
+    I_lcs1  =  diag(I1);
+    I_lcs2  =  diag(I2);
+    I_lcs3  =  diag(I3);
+    I_lcs4  =  diag(I4);
 
     I_gcs0 = uTorCS * I_lcs0u * uTorCS.';
     I_gcs1 = UaCS * I_lcs1 * UaCS.';
@@ -188,7 +195,7 @@ function [INT, GRA, Itheta] = GetTorques_
 
     
 
-    fprintf('theta2dot defined\t')
+    fprintf('I defined\t')
     toc
     
     tic
@@ -257,15 +264,15 @@ function [INT, GRA, Itheta] = GetTorques_
     RJT3 = I_gcs3*omd3+cross(om3, (I_gcs3 * om3))  +RJT4-cross(-Lg3, F3)-cross((L3-Lg3), -F4);
     RJT2 = I_gcs2*omd2+cross(om2, (I_gcs2 * om2))  +RJT3-cross(-Lg2, F2)-cross((L2-Lg2), -F3);
     RJT1 = I_gcs1*omd1+cross(om1, (I_gcs1 * om1))  +RJT2-cross(-Lg1, F1)-cross((L1-Lg1), -F2);
-    RJT0 = I_gcs0*omd0+cross(om0u, (I_gcs0 * om0u))+RJT1-cross(-Lg0, F0)-cross((L0-Lg0), -F1);
+    RJT0 = I_gcs0*omd0+cross(om0u, (I_gcs0 * om0u))+RJT1-cross(-Lg0, F0)-cross(L0d, -F1);
 
 
     syms_Replaced = [
-        th0u,    om0u - om0l, diff(thd0, t) - cross(Om0, thd0); ...
-         th1,     om1 - om0u, diff(thd1, t) - cross(Om1, thd1); ...
-         th2,      om2 - om1, diff(thd2, t) - cross(Om2, thd2); ...
-         th3,      om3 - om2, diff(thd3, t) - cross(Om3, thd3); ...
-         th4,      om4 - om3, diff(thd4, t) - cross(Om4, thd4); ...
+        th0u, thd0, th2d0; ...
+         th1, thd1, th2d1; ...
+         th2, thd2, th2d2; ...
+         th3, thd3, th2d3; ...
+         th4, thd4, th2d4; ...
        r_tor, diff(r_tor, t), diff(r_tor, t, t) ...
     ];
 

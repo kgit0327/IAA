@@ -80,7 +80,7 @@ function [INT, GRA, Itheta] = GetTorques_
     TrCS(:, 2) = unitvec(cross(TrCS(:, 3), TrCS(:, 1)));
     
     % ShCS -> y-x-z rotation, x: cross(y, z), y: proximal y, z: distal z
-    ShCS(:, 2) = TrCS(:, 2);
+    ShCS(:, 2) = uTorCS(:, 2);
     ShCS(:, 3) = UaCS(:, 3);
     ShCS(:, 1) = unitvec(cross(ShCS(:, 2), ShCS(:, 3)));
 
@@ -161,10 +161,18 @@ function [INT, GRA, Itheta] = GetTorques_
     tic
     thd0_jcs = TrCS \ thd0;
     toc
+    tic
     thd1_jcs = ShCS \ thd1;
+    toc
+    tic
     thd2_jcs = ElCS \ thd2;
+    toc
+    tic
     thd3_jcs = WrCS \ thd3;
+    toc
+    tic
     thd4_jcs = RhCS \ thd4;
+    toc
 
     th2d0_jcs = diff(thd0_jcs, t);
     th2d1_jcs = diff(thd1_jcs, t);

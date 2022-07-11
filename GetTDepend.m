@@ -52,7 +52,9 @@ function tDeps = GetTDepend(ExperimentDatas, iData)
     tDeps.Lg1 = ExperimentDatas(iData).cgdat(3).cg - sh;
     tDeps.Lg2 = ExperimentDatas(iData).cgdat(2).cg - el;
     tDeps.Lg3 = ExperimentDatas(iData).cgdat(1).cg - wr;
-    tDeps.Lg4 = RacketSegdat.cg - rh;   
+    tDeps.Lg4 = RacketSegdat.cg - rh;
+
+    tDeps.L0d = sh - ExperimentDatas(iData).cgdat(14).cg;
 
     th0(2, :) = asin(reshape(uTorCS(3, 1, :), [1 NUM_FRAME]));
     th0(1, :) = acos(reshape(uTorCS(3, 3, :), [1 NUM_FRAME]) ./ cos(th0(2, :)));

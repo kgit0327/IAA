@@ -276,12 +276,22 @@ function [INT, GRA, Itheta] = GetTorques_
         ];
     
     subs_pre = @(input) subs( input, syms_Replaced, syms_Replacing);
-
+    
+    tic
     ag0 = subs_pre(ag0);
+    toc
+    tic
     ag1 = subs_pre(ag1);
+    toc
+    tic
     ag2 = subs_pre(ag2);
+    toc
+    tic
     ag3 = subs_pre(ag3);
+    toc
+    tic
     ag4 = subs_pre(ag4);
+    toc
     
     %%
     tic

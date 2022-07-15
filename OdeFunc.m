@@ -1,11 +1,4 @@
 function dqdt = OdeFunc(t, q, RJT, r_tor, Constants)
-
-    
-    l0 = Constants.l(1);
-    l1 = Constants.l(2);
-    l2 = Constants.l(3);
-    l3 = Constants.l(4);
-    l4 = Constants.l(5);
     
     m0 = Constants.m(1);
     m1 = Constants.m(2);

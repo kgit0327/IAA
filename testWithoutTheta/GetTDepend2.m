@@ -36,6 +36,12 @@ function tDeps = GetTDepend2(ExperimentDatas, iData)
         RhCS(:, :, iFrame) = RacketSegdat.Var(iFrame).R;
     end
 
+    tDeps.Rj0 = TrCS;
+    tDeps.Rj1 = ShCS;
+    tDeps.Rj2 = ElCS;
+    tDeps.Rj3 = WrCS;
+    tDeps.Rj4 = RhCS;
+
     ri = ExperimentDatas(iData).n.ribC;
     sh = ExperimentDatas(iData).n.shR;
     el = ExperimentDatas(iData).n.elbR;

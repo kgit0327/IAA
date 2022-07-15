@@ -175,6 +175,8 @@ function tDeps = GetTDepend2(ExperimentDatas, iData)
     tDeps.Om2 = Om2;
     tDeps.Om3 = Om3;
     tDeps.Om4 = Om4;
+
+    tDeps.omd0l = dif3(om0l, NUM_FRAME, 1/200);
     
 
     thd0 = om0u - om0l;
@@ -189,7 +191,7 @@ function tDeps = GetTDepend2(ExperimentDatas, iData)
     th2d3 = dif3(thd3, NUM_FRAME, 1/200) - cross(Om3, thd3, 1);
     th2d4 = dif3(thd4, NUM_FRAME, 1/200) - cross(Om4, thd4, 1); 
 
-    r_tor = ExperimentDatas(iData).n.troC;
+    r_tor = ExperimentDatas(iData).n.ribC;
     v_tor = dif3(r_tor, NUM_FRAME, 1/200);
     a_tor = dif3(v_tor, NUM_FRAME, 1/200);
 

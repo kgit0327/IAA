@@ -8,6 +8,12 @@ function [INT, GRA, Itheta] = GetTorques_omega
     syms I_gcs3 [3 3] 
     syms I_gcs4 [3 3]
 
+    syms Rj0(t) [3 3]
+    syms Rj1(t) [3 3]
+    syms Rj2(t) [3 3]
+    syms Rj3(t) [3 3]
+    syms Rj4(t) [3 3]
+
     syms a_tor(t) [3 1]
     syms thd0(t) [3 1]
     syms thd1(t) [3 1]
@@ -67,6 +73,12 @@ function [INT, GRA, Itheta] = GetTorques_omega
     syms Lg3 [3 1] real
     syms Lg4 [3 1] real
 
+    syms Rj0_ [3 3]
+    syms Rj1_ [3 3]
+    syms Rj2_ [3 3]
+    syms Rj3_ [3 3]
+    syms Rj4_ [3 3]
+
     fprintf('syms Done\t')
     toc
 
@@ -75,23 +87,25 @@ function [INT, GRA, Itheta] = GetTorques_omega
                      thd0,  thd1,  thd2,  thd3,  thd4, ...
                     th2d0, th2d1, th2d2, th2d3, th2d4, ...
                      om0u,   om1,   om2,   om3,   om4, ...
-                      Om0,   Om1,   Om2,   Om3,   Om4];
+                      Om0,   Om1,   Om2,   Om3,   Om4, ...
+                      Rj0,   Rj1,   Rj2,   Rj3,   Rj4];
 
     subs_var_post = [
                     a_tor_, omd0l_                            ...
                      thd0_,  thd1_,  thd2_,  thd3_,  thd4_, ...
                     th2d0_, th2d1_, th2d2_, th2d3_, th2d4_, ...
                      om0u_,   om1_,   om2_,   om3_,   om4_, ...
-                      Om0_,   Om1_,   Om2_,   Om3_,   Om4_];
+                      Om0_,   Om1_,   Om2_,   Om3_,   Om4_, ...
+                      Rj0_,   Rj1_,   Rj2_,   Rj3_,   Rj4_];
 
     subs_pre = @(input) subs(input, subs_var_pre, subs_var_post);
 
     tic
-    A0 = cross(Om0, thd0);
-    A1 = cross(Om1, thd1);
-    A2 = cross(Om2, thd2);
-    A3 = cross(Om3, thd3);
-    A4 = cross(Om4, thd4);
+    A0 = cross(Om0, Rj0 * thd0);
+    A1 = cross(Om1, Rj1 * thd1);
+    A2 = cross(Om2, Rj2 * thd2);
+    A3 = cross(Om3, Rj3 * thd3);
+    A4 = cross(Om4, Rj4 * thd4);
     
     B0 = cross(om0u, cross(om0u, L0));
     Bg0 = cross(om0u, cross(om0u, Lg0));
@@ -114,11 +128,11 @@ function [INT, GRA, Itheta] = GetTorques_omega
     %%
     tic
     omd0l = diff(om0l, t);
-    omd0 = omd0l  + th2d0 + A0;
-    omd1  = omd0  + th2d1 + A1;
-    omd2  = omd1  + th2d2 + A2;
-    omd3  = omd2  + th2d3 + A3;
-    omd4  = omd3  + th2d4 + A4;
+    omd0 = omd0l  + Rj0 * th2d0 + A0;
+    omd1  = omd0  + Rj1 * th2d1 + A1;
+    omd2  = omd1  + Rj2 * th2d2 + A2;
+    omd3  = omd2  + Rj3 * th2d3 + A3;
+    omd4  = omd3  + Rj4 * th2d4 + A4;
 
     a0 = a_tor;
     a1 = a0 + cross(omd0, L0)  + B0;

@@ -1,83 +1,15 @@
-function Tau = CompTau2
-tic
-addpath('../')
-clear all
-
-load('NPMEAN.mat');
-
-iData = 1;
-
-Constants = GetConstants(ExperimentDatas, iData);
-tDeps = GetTDepend2(ExperimentDatas, iData);
-
-NUM_FRAME = ExperimentDatas(iData).nFr;
-
-g1 = Constants.g(1);
-g2 = Constants.g(2);
-g3 = Constants.g(3);
-
-m0u = Constants.m(2);
-m1 = Constants.m(3);
-m2 = Constants.m(4);
-m3 = Constants.m(5);
-m4 = Constants.m(6);
-
-a_tor = tDeps.a_tor;
-
-L0 = tDeps.L0;
-L0d = tDeps.L0d;
-L1 = tDeps.L1;
-L2 = tDeps.L2;
-L3 = tDeps.L3;
-L4 = tDeps.L4;
-
-Lg0 = tDeps.Lg0;
-Lg1 = tDeps.Lg1;
-Lg2 = tDeps.Lg2;
-Lg3 = tDeps.Lg3;
-Lg4 = tDeps.Lg4;
-
-thd0 = tDeps.thd0;
-thd1 = tDeps.thd1;
-thd2 = tDeps.thd2;
-thd3 = tDeps.thd3;
-thd4 = tDeps.thd4;
-
-om0u = tDeps.om0u;
-om1 = tDeps.om1;
-om2 = tDeps.om2;
-om3 = tDeps.om3;
-om4 = tDeps.om4;
-
-omd0l = tDeps.omd0l;
-
-Om0 = tDeps.Om0;
-Om1 = tDeps.Om1;
-Om2 = tDeps.Om2;
-Om3 = tDeps.Om3;
-Om4 = tDeps.Om4;
-
-I_gcs0 = tDeps.I_gcs0;
-I_gcs1 = tDeps.I_gcs1;
-I_gcs2 = tDeps.I_gcs2;
-I_gcs3 = tDeps.I_gcs3;
-I_gcs4 = tDeps.I_gcs4;
-
-th2d0 = tDeps.th2d0;
-th2d1 = tDeps.th2d1;
-th2d2 = tDeps.th2d2;
-th2d3 = tDeps.th2d3;
-th2d4 = tDeps.th2d4;
-
-Tau = nan(15, NUM_FRAME); % RM - GC + 1);
-
-fprintf('Initialized\n')
-toc
-
-tic
-for iFrame = 1 : NUM_FRAME
-    iFrame_ = iFrame;
-
+function dqdt = OdeFunc2(t, q, RJT, a_tor, Constants)
+    
+    g1 = Constants.g(1);
+    g2 = Constants.g(2);
+    g3 = Constants.g(3);
+    
+    m0u = Constants.m(2);
+    m1 = Constants.m(3);
+    m2 = Constants.m(4);
+    m3 = Constants.m(5);
+    m4 = Constants.m(6);
+    
     a_tor_1 = a_tor(1, iFrame_);
     a_tor_2 = a_tor(2, iFrame_);
     a_tor_3 = a_tor(3, iFrame_);
@@ -236,22 +168,78 @@ for iFrame = 1 : NUM_FRAME
     I_gcs43_2 = I_gcs4(3, 2, iFrame_);
     I_gcs43_3 = I_gcs4(3, 3, iFrame_);
     
-
-    %%
+    th0_1 = q(1);
+    th0_2 = q(2);
+    th0_3 = q(3);
+    
+    thd0_1 = q(4);
+    thd0_2 = q(5);
+    thd0_3 = q(6);
+    
+    th1_1 = q(7);
+    th1_2 = q(8);
+    th1_3 = q(9);
+    
+    thd1_1 = q(10);
+    thd1_2 = q(11);
+    thd1_3 = q(12);
+    
+    th2_1 = q(13);
+    th2_2 = q(14);
+    th2_3 = q(15);
+    
+    thd2_1 = q(16);
+    thd2_2 = q(17);
+    thd2_3 = q(18);
+    
+    th3_1 = q(19);
+    th3_2 = q(20);
+    th3_3 = q(21);
+    
+    thd3_1 = q(22);
+    thd3_2 = q(23);
+    thd3_3 = q(24);
+    
+    th4_1 = q(25);
+    th4_2 = q(26);
+    th4_3 = q(27);
+    
+    thd4_1 = q(28);
+    thd4_2 = q(29);
+    thd4_3 = q(30);
+    
     GRA = find_GRA2(L11,L12,L13,L21,L22,L23,L31,L32,L33,L0d1,L0d2,L0d3,Lg01,Lg02,Lg03,Lg11,Lg12,Lg13,Lg21,Lg22,Lg23,Lg31,Lg32,Lg33,Lg41,Lg42,Lg43,g1,g2,g3,m1,m2,m3,m4,m0u);
     INT = find_INT2(I_gcs01_1,I_gcs01_2,I_gcs01_3,I_gcs02_1,I_gcs02_2,I_gcs02_3,I_gcs03_1,I_gcs03_2,I_gcs03_3,I_gcs11_1,I_gcs11_2,I_gcs11_3,I_gcs12_1,I_gcs12_2,I_gcs12_3,I_gcs13_1,I_gcs13_2,I_gcs13_3,I_gcs21_1,I_gcs21_2,I_gcs21_3,I_gcs22_1,I_gcs22_2,I_gcs22_3,I_gcs23_1,I_gcs23_2,I_gcs23_3,I_gcs31_1,I_gcs31_2,I_gcs31_3,I_gcs32_1,I_gcs32_2,I_gcs32_3,I_gcs33_1,I_gcs33_2,I_gcs33_3,I_gcs41_1,I_gcs41_2,I_gcs41_3,I_gcs42_1,I_gcs42_2,I_gcs42_3,I_gcs43_1,I_gcs43_2,I_gcs43_3,L01,L02,L03,L11,L12,L13,L21,L22,L23,L31,L32,L33,L0d1,L0d2,L0d3,Lg01,Lg02,Lg03,Lg11,Lg12,Lg13,Lg21,Lg22,Lg23,Lg31,Lg32,Lg33,Lg41,Lg42,Lg43,Om0_1,Om0_2,Om0_3,Om1_1,Om1_2,Om1_3,Om2_1,Om2_2,Om2_3,Om3_1,Om3_2,Om3_3,Om4_1,Om4_2,Om4_3,a_tor_1,a_tor_2,a_tor_3,m1,m2,m3,m4,m0u,om1_1,om1_2,om1_3,om2_1,om2_2,om2_3,om3_1,om3_2,om3_3,om4_1,om4_2,om4_3,om0u_1,om0u_2,om0u_3,omd0l_1,omd0l_2,omd0l_3,thd0_1,thd0_2,thd0_3,thd1_1,thd1_2,thd1_3,thd2_1,thd2_2,thd2_3,thd3_1,thd3_2,thd3_3,thd4_1,thd4_2,thd4_3);
     Itheta = find_Itheta2(I_gcs01_1,I_gcs01_2,I_gcs01_3,I_gcs02_1,I_gcs02_2,I_gcs02_3,I_gcs03_1,I_gcs03_2,I_gcs03_3,I_gcs11_1,I_gcs11_2,I_gcs11_3,I_gcs12_1,I_gcs12_2,I_gcs12_3,I_gcs13_1,I_gcs13_2,I_gcs13_3,I_gcs21_1,I_gcs21_2,I_gcs21_3,I_gcs22_1,I_gcs22_2,I_gcs22_3,I_gcs23_1,I_gcs23_2,I_gcs23_3,I_gcs31_1,I_gcs31_2,I_gcs31_3,I_gcs32_1,I_gcs32_2,I_gcs32_3,I_gcs33_1,I_gcs33_2,I_gcs33_3,I_gcs41_1,I_gcs41_2,I_gcs41_3,I_gcs42_1,I_gcs42_2,I_gcs42_3,I_gcs43_1,I_gcs43_2,I_gcs43_3,L01,L02,L03,L11,L12,L13,L21,L22,L23,L31,L32,L33,L0d1,L0d2,L0d3,Lg01,Lg02,Lg03,Lg11,Lg12,Lg13,Lg21,Lg22,Lg23,Lg31,Lg32,Lg33,Lg41,Lg42,Lg43,m1,m2,m3,m4,m0u);
 
-    th2d = [th2d0(:, iFrame_); th2d1(:, iFrame_); th2d2(:, iFrame_); th2d3(:, iFrame_); th2d4(:, iFrame_)];
+    th2d = Itheta \ (RJT + INT + GRA);
 
-    Tau_ = Itheta * th2d - INT - GRA;
+    th2d01 = th2d(1);
+    th2d02 = th2d(2);
+    th2d03 = th2d(3);
+    th2d11 = th2d(4);
+    th2d12 = th2d(5);
+    th2d13 = th2d(6);
+    th2d21 = th2d(7);
+    th2d22 = th2d(8);
+    th2d23 = th2d(9);
+    th2d31 = th2d(10);
+    th2d32 = th2d(11);
+    th2d33 = th2d(12);
+    th2d41 = th2d(13);
+    th2d42 = th2d(14);
+    th2d43 = th2d(15);
 
-    Tau(:, iFrame) = Tau_;
-
-    fprintf('Number %d done.\n', iFrame)
-    
-
-
-end
-toc
+    dqdt = [...
+            thd0_1, thd0_2, thd0_3, ...
+            th2d01, th2d02, th2d03, ...
+            thd1_1, thd1_2, thd1_3, ...
+            th2d11, th2d12, th2d13, ...
+            thd2_1, thd2_2, thd2_3, ...
+            th2d21, th2d22, th2d23, ...
+            thd3_1, thd3_2, thd3_3, ...
+            th2d31, th2d32, th2d33, ...
+            thd4_1, thd4_2, thd4_3, ...
+            th2d41, th2d42, th2d43, ...
+            ];
 end

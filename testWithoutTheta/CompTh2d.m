@@ -1,7 +1,6 @@
-function Tau = CompTau2
+function [th2d_, th2d_gra, th2d_int] = CompTh2d
 tic
 addpath('../')
-clear all
 
 load('NPMEAN.mat');
 
@@ -29,7 +28,6 @@ L0d = tDeps.L0d;
 L1 = tDeps.L1;
 L2 = tDeps.L2;
 L3 = tDeps.L3;
-L4 = tDeps.L4;
 
 Lg0 = tDeps.Lg0;
 Lg1 = tDeps.Lg1;
@@ -69,7 +67,7 @@ th2d2 = tDeps.th2d2;
 th2d3 = tDeps.th2d3;
 th2d4 = tDeps.th2d4;
 
-Tau = nan(15, NUM_FRAME); % RM - GC + 1);
+tau = CompTau2;
 
 fprintf('Initialized\n')
 toc
@@ -235,6 +233,8 @@ for iFrame = 1 : NUM_FRAME
     I_gcs43_1 = I_gcs4(3, 1, iFrame_);
     I_gcs43_2 = I_gcs4(3, 2, iFrame_);
     I_gcs43_3 = I_gcs4(3, 3, iFrame_);
+
+    Tau_ = tau(:, iFrame_);
     
 
     %%
@@ -244,9 +244,16 @@ for iFrame = 1 : NUM_FRAME
 
     th2d = [th2d0(:, iFrame_); th2d1(:, iFrame_); th2d2(:, iFrame_); th2d3(:, iFrame_); th2d4(:, iFrame_)];
 
-    Tau_ = Itheta * th2d - INT - GRA;
+    iItheta = inv(Itheta);
+    
+    for j = 1 : 15
+        for i = 1 : 15
+            th2d_(j).tau(i, iFrame_) = iItheta(j, i) .* Tau_(i);
+        end
+    end
+    th2d_gra(:, iFrame_) = Itheta \ GRA;
+    th2d_int(:, iFrame_) = Itheta \ INT;
 
-    Tau(:, iFrame) = Tau_;
 
     fprintf('Number %d done.\n', iFrame)
     

@@ -163,6 +163,10 @@ for iFrame = 1 : NUM_FRAME
     om4_2 = om4(2, iFrame_);
     om4_3 = om4(3, iFrame_);
 
+    omd0l_1 = omd0l(1, iFrame_);
+    omd0l_2 = omd0l(2, iFrame_);
+    omd0l_3 = omd0l(3, iFrame_);
+
     Om0_1 = Om0(1, iFrame_);
     Om0_2 = Om0(2, iFrame_);
     Om0_3 = Om0(3, iFrame_);
@@ -236,7 +240,7 @@ for iFrame = 1 : NUM_FRAME
 
     %%
     GRA = find_GRA2(L11,L12,L13,L21,L22,L23,L31,L32,L33,L0d1,L0d2,L0d3,Lg01,Lg02,Lg03,Lg11,Lg12,Lg13,Lg21,Lg22,Lg23,Lg31,Lg32,Lg33,Lg41,Lg42,Lg43,g1,g2,g3,m1,m2,m3,m4,m0u);
-    INT = find_INT2(I_gcs01_1,I_gcs01_2,I_gcs01_3,I_gcs02_1,I_gcs02_2,I_gcs02_3,I_gcs03_1,I_gcs03_2,I_gcs03_3,I_gcs11_1,I_gcs11_2,I_gcs11_3,I_gcs12_1,I_gcs12_2,I_gcs12_3,I_gcs13_1,I_gcs13_2,I_gcs13_3,I_gcs21_1,I_gcs21_2,I_gcs21_3,I_gcs22_1,I_gcs22_2,I_gcs22_3,I_gcs23_1,I_gcs23_2,I_gcs23_3,I_gcs31_1,I_gcs31_2,I_gcs31_3,I_gcs32_1,I_gcs32_2,I_gcs32_3,I_gcs33_1,I_gcs33_2,I_gcs33_3,I_gcs41_1,I_gcs41_2,I_gcs41_3,I_gcs42_1,I_gcs42_2,I_gcs42_3,I_gcs43_1,I_gcs43_2,I_gcs43_3,L01,L02,L03,L11,L12,L13,L21,L22,L23,L31,L32,L33,L0d1,L0d2,L0d3,Lg01,Lg02,Lg03,Lg11,Lg12,Lg13,Lg21,Lg22,Lg23,Lg31,Lg32,Lg33,Lg41,Lg42,Lg43,Om0_1,Om0_2,Om0_3,Om1_1,Om1_2,Om1_3,Om2_1,Om2_2,Om2_3,Om3_1,Om3_2,Om3_3,Om4_1,Om4_2,Om4_3,a_tor_1,a_tor_2,a_tor_3,m1,m2,m3,m4,m0u,om1_1,om1_2,om1_3,om2_1,om2_2,om2_3,om3_1,om3_2,om3_3,om4_1,om4_2,om4_3,om0u_1,om0u_2,om0u_3,thd0_1,thd0_2,thd0_3,thd1_1,thd1_2,thd1_3,thd2_1,thd2_2,thd2_3,thd3_1,thd3_2,thd3_3,thd4_1,thd4_2,thd4_3);
+    INT = find_INT2(I_gcs01_1,I_gcs01_2,I_gcs01_3,I_gcs02_1,I_gcs02_2,I_gcs02_3,I_gcs03_1,I_gcs03_2,I_gcs03_3,I_gcs11_1,I_gcs11_2,I_gcs11_3,I_gcs12_1,I_gcs12_2,I_gcs12_3,I_gcs13_1,I_gcs13_2,I_gcs13_3,I_gcs21_1,I_gcs21_2,I_gcs21_3,I_gcs22_1,I_gcs22_2,I_gcs22_3,I_gcs23_1,I_gcs23_2,I_gcs23_3,I_gcs31_1,I_gcs31_2,I_gcs31_3,I_gcs32_1,I_gcs32_2,I_gcs32_3,I_gcs33_1,I_gcs33_2,I_gcs33_3,I_gcs41_1,I_gcs41_2,I_gcs41_3,I_gcs42_1,I_gcs42_2,I_gcs42_3,I_gcs43_1,I_gcs43_2,I_gcs43_3,L01,L02,L03,L11,L12,L13,L21,L22,L23,L31,L32,L33,L0d1,L0d2,L0d3,Lg01,Lg02,Lg03,Lg11,Lg12,Lg13,Lg21,Lg22,Lg23,Lg31,Lg32,Lg33,Lg41,Lg42,Lg43,Om0_1,Om0_2,Om0_3,Om1_1,Om1_2,Om1_3,Om2_1,Om2_2,Om2_3,Om3_1,Om3_2,Om3_3,Om4_1,Om4_2,Om4_3,a_tor_1,a_tor_2,a_tor_3,m1,m2,m3,m4,m0u,om1_1,om1_2,om1_3,om2_1,om2_2,om2_3,om3_1,om3_2,om3_3,om4_1,om4_2,om4_3,om0u_1,om0u_2,om0u_3,omd0l_1,omd0l_2,omd0l_3,thd0_1,thd0_2,thd0_3,thd1_1,thd1_2,thd1_3,thd2_1,thd2_2,thd2_3,thd3_1,thd3_2,thd3_3,thd4_1,thd4_2,thd4_3);
     Itheta = find_Itheta2(I_gcs01_1,I_gcs01_2,I_gcs01_3,I_gcs02_1,I_gcs02_2,I_gcs02_3,I_gcs03_1,I_gcs03_2,I_gcs03_3,I_gcs11_1,I_gcs11_2,I_gcs11_3,I_gcs12_1,I_gcs12_2,I_gcs12_3,I_gcs13_1,I_gcs13_2,I_gcs13_3,I_gcs21_1,I_gcs21_2,I_gcs21_3,I_gcs22_1,I_gcs22_2,I_gcs22_3,I_gcs23_1,I_gcs23_2,I_gcs23_3,I_gcs31_1,I_gcs31_2,I_gcs31_3,I_gcs32_1,I_gcs32_2,I_gcs32_3,I_gcs33_1,I_gcs33_2,I_gcs33_3,I_gcs41_1,I_gcs41_2,I_gcs41_3,I_gcs42_1,I_gcs42_2,I_gcs42_3,I_gcs43_1,I_gcs43_2,I_gcs43_3,L01,L02,L03,L11,L12,L13,L21,L22,L23,L31,L32,L33,L0d1,L0d2,L0d3,Lg01,Lg02,Lg03,Lg11,Lg12,Lg13,Lg21,Lg22,Lg23,Lg31,Lg32,Lg33,Lg41,Lg42,Lg43,m1,m2,m3,m4,m0u);
 
     th2d = [th2d0(:, iFrame_); th2d1(:, iFrame_); th2d2(:, iFrame_); th2d3(:, iFrame_); th2d4(:, iFrame_)];

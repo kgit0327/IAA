@@ -2,7 +2,7 @@ function [INT, GRA, Itheta] = GetTorques_omega
     tic
     addpath('../')
 
-    syms m0u m1 m2 m3 m4 
+    syms m0l m0u m1 m2 m3 m4 
     syms g [3 1] 
     syms I_gcs0 [3 3]
     syms I_gcs1 [3 3] 
@@ -11,7 +11,7 @@ function [INT, GRA, Itheta] = GetTorques_omega
     syms I_gcs4 [3 3]
 
 
-    syms a_tor(t) [3 1]
+    syms a0l(t) [3 1]
     syms thd0(t) [3 1]
     syms thd1(t) [3 1]
     syms thd2(t) [3 1]
@@ -34,7 +34,7 @@ function [INT, GRA, Itheta] = GetTorques_omega
     syms Om3(t) [3 1]
     syms Om4(t) [3 1]
 
-    syms a_tor_ [3 1] real
+    syms a0l_ [3 1] real
     syms thd0_ [3 1] real
     syms thd1_ [3 1] real
     syms thd2_ [3 1] real
@@ -59,11 +59,14 @@ function [INT, GRA, Itheta] = GetTorques_omega
 
     syms omd0l_ [3 1]
     
+    syms L0l [3 1] real
     syms L0 [3 1] real
     syms L0d [3 1] real
     syms L1 [3 1] real
     syms L2 [3 1] real
     syms L3 [3 1] real
+
+    syms Lg0l [3 1] real
     syms Lg0 [3 1] real
     syms Lg1 [3 1] real
     syms Lg2 [3 1] real
@@ -80,14 +83,14 @@ function [INT, GRA, Itheta] = GetTorques_omega
     toc
 
     subs_var_pre = [
-                    a_tor, diff(om0l, t),             ...
+                    a0l, diff(om0l, t), om0l,          ...
                      thd0,  thd1,  thd2,  thd3,  thd4, ...
                     th2d0, th2d1, th2d2, th2d3, th2d4, ...
                      om0u,   om1,   om2,   om3,   om4, ...
                       Om0,   Om1,   Om2,   Om3,   Om4];
 
     subs_var_post = [
-                    a_tor_, omd0l_                            ...
+                     a0l_, omd0l_, om0l_,                   ...
                      thd0_,  thd1_,  thd2_,  thd3_,  thd4_, ...
                     th2d0_, th2d1_, th2d2_, th2d3_, th2d4_, ...
                      om0u_,   om1_,   om2_,   om3_,   om4_, ...
@@ -102,6 +105,8 @@ function [INT, GRA, Itheta] = GetTorques_omega
     A3 = cross(Om3, Rj3 * thd3);
     A4 = cross(Om4, Rj4 * thd4);
     
+    B0l = cross(om0l, cross(om0l, L0l));
+    Bg0l = cross(om0l, cross(om0l, Lg0l));
     B0 = cross(om0u, cross(om0u, L0));
     Bg0 = cross(om0u, cross(om0u, Lg0));
     B1 = cross(om1, cross(om1, L1));
@@ -129,29 +134,34 @@ function [INT, GRA, Itheta] = GetTorques_omega
     omd3  = omd2  + Rj3 * th2d3 + A3;
     omd4  = omd3  + Rj4 * th2d4 + A4;
 
-    a0 = a_tor;
-    a1 = a0 + cross(omd0, L0)  + B0;
-    a2 = a1 + cross(omd1, L1)  + B1;
-    a3 = a2 + cross(omd2, L2)  + B2;
-    a4 = a3 + cross(omd3, L3)  + B3;
+    a0 = a0l + cross(omd0l, L0l) + B0l;
+    a1 = a0  + cross(omd0, L0)   + B0;
+    a2 = a1  + cross(omd1, L1)   + B1;
+    a3 = a2  + cross(omd2, L2)   + B2;
+    a4 = a3  + cross(omd3, L3)   + B3;
     
     ag0 = a0 + cross(omd0, Lg0) + Bg0;
     ag1 = a1 + cross(omd1, Lg1) + Bg1;
     ag2 = a2 + cross(omd2, Lg2) + Bg2;
     ag3 = a3 + cross(omd3, Lg3) + Bg3;
     ag4 = a4 + cross(omd4, Lg4) + Bg4;
-
     
     fprintf('Other vars defined\t')
     toc
 
     %%
     tic
-    F4 = m4  * ag4 - m4  * g;
-    F3 = m3  * ag3 - m3  * g + F4;
-    F2 = m2  * ag2 - m2  * g + F3;
-    F1 = m1  * ag1 - m1  * g + F2;
-    F0 = m0u * ag0 - m0u * g + F1;
+%     F0 =    - m0l * (ag0l - g);
+%     F1 = F0 - m0u * (ag0 - g);
+%     F2 = F1 -  m1 * (ag1 - g);
+%     F3 = F2 -  m2 * (ag2 - g);
+%     F4 = F3 -  m3 * (ag3 - g);
+
+    F4 =      m4  * (ag4 - g);
+    F3 = F4 + m3  * (ag3 - g);
+    F2 = F3 + m2  * (ag2 - g);
+    F1 = F2 + m1  * (ag1 - g);
+    F0 = F1 + m0u * (ag0 - g);
 
     fprintf('F defined\t')
     toc
@@ -168,15 +178,17 @@ function [INT, GRA, Itheta] = GetTorques_omega
     RJT2 = formula(subs_pre(RJT2));
     RJT3 = formula(subs_pre(RJT3));
     RJT4 = formula(subs_pre(RJT4));
+
+    F0 = formula(subs_pre(F0));
      
-    RJT = [a_tor_; RJT0; RJT1; RJT2; RJT3; RJT4];
+    RJT = [F0; RJT0; RJT1; RJT2; RJT3; RJT4];
 
     fprintf('Equation defined\t')
     toc
     %%
-    th2d_ = [formula(th2d0_); formula(th2d1_); formula(th2d2_); formula(th2d3_); formula(th2d4_)];
+    th2d_ = [formula(a0l_); formula(th2d0_); formula(th2d1_); formula(th2d2_); formula(th2d3_); formula(th2d4_)];
 
-    [Coeff, Term] = coeffs_Vector(RJT, [a_tor_.', th2d_.', g.']);
+    [Coeff, Term] = coeffs_Vector(RJT, [th2d_.', g.']);
 
     Term
 

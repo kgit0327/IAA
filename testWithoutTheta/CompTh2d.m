@@ -6,7 +6,7 @@ load('NPMEAN.mat');
 
 
 
-Constants = GetConstants(ExperimentDatas, iData);
+Constants = GetConstants2(ExperimentDatas, iData);
 tDeps = GetTDepend2(ExperimentDatas, iData);
 
 NUM_FRAME = ExperimentDatas(iData).nFr;
@@ -15,19 +15,20 @@ g1 = Constants.g(1);
 g2 = Constants.g(2);
 g3 = Constants.g(3);
 
+m0l = Constants.m(1);
 m0u = Constants.m(2);
 m1 = Constants.m(3);
 m2 = Constants.m(4);
 m3 = Constants.m(5);
-m4 = Constants.m(6);
 
-
+L0l = tDeps.L0l;
 L0 = tDeps.L0;
 L0d = tDeps.L0d;
 L1 = tDeps.L1;
 L2 = tDeps.L2;
 L3 = tDeps.L3;
 
+Lg0l = tDeps.Lg0l;
 Lg0 = tDeps.Lg0;
 Lg1 = tDeps.Lg1;
 Lg2 = tDeps.Lg2;
@@ -40,6 +41,7 @@ thd2 = tDeps.thd2;
 thd3 = tDeps.thd3;
 thd4 = tDeps.thd4;
 
+om0l = tDeps.om0l;
 om0u = tDeps.om0u;
 om1 = tDeps.om1;
 om2 = tDeps.om2;
@@ -75,6 +77,10 @@ tic
 for iFrame = 1 : NUM_FRAME
     iFrame_ = iFrame;
     
+    L0l1 = L0l(1, iFrame_);
+    L0l2 = L0l(2, iFrame_);
+    L0l3 = L0l(3, iFrame_);
+
     L01 = L0(1, iFrame_);
     L02 = L0(2, iFrame_);
     L03 = L0(3, iFrame_);
@@ -95,6 +101,10 @@ for iFrame = 1 : NUM_FRAME
     L32 = L3(2, iFrame_);
     L33 = L3(3, iFrame_);
     
+    Lg0l1 = Lg0l(1, iFrame_);
+    Lg0l2 = Lg0l(2, iFrame_);
+    Lg0l3 = Lg0l(3, iFrame_);
+
     Lg01 = Lg0(1, iFrame_);
     Lg02 = Lg0(2, iFrame_);
     Lg03 = Lg0(3, iFrame_);
@@ -134,6 +144,10 @@ for iFrame = 1 : NUM_FRAME
     thd4_1 = thd4(1, iFrame_);
     thd4_2 = thd4(2, iFrame_);
     thd4_3 = thd4(3, iFrame_);
+
+    om0l_1 = om0l(1, iFrame_);
+    om0l_2 = om0l(2, iFrame_);
+    om0l_3 = om0l(3, iFrame_);
 
     om0u_1 = om0u(1, iFrame_);
     om0u_2 = om0u(2, iFrame_);
@@ -283,9 +297,9 @@ for iFrame = 1 : NUM_FRAME
     
 
     %%
-    GRA = find_GRA2(L11,L12,L13,L21,L22,L23,L31,L32,L33,L0d1,L0d2,L0d3,Lg01,Lg02,Lg03,Lg11,Lg12,Lg13,Lg21,Lg22,Lg23,Lg31,Lg32,Lg33,Lg41,Lg42,Lg43,g1,g2,g3,m1,m2,m3,m4,m0u);
-    INT = find_INT2(I_gcs01_1,I_gcs01_2,I_gcs01_3,I_gcs02_1,I_gcs02_2,I_gcs02_3,I_gcs03_1,I_gcs03_2,I_gcs03_3,I_gcs11_1,I_gcs11_2,I_gcs11_3,I_gcs12_1,I_gcs12_2,I_gcs12_3,I_gcs13_1,I_gcs13_2,I_gcs13_3,I_gcs21_1,I_gcs21_2,I_gcs21_3,I_gcs22_1,I_gcs22_2,I_gcs22_3,I_gcs23_1,I_gcs23_2,I_gcs23_3,I_gcs31_1,I_gcs31_2,I_gcs31_3,I_gcs32_1,I_gcs32_2,I_gcs32_3,I_gcs33_1,I_gcs33_2,I_gcs33_3,I_gcs41_1,I_gcs41_2,I_gcs41_3,I_gcs42_1,I_gcs42_2,I_gcs42_3,I_gcs43_1,I_gcs43_2,I_gcs43_3,L01,L02,L03,L11,L12,L13,L21,L22,L23,L31,L32,L33,L0d1,L0d2,L0d3,Lg01,Lg02,Lg03,Lg11,Lg12,Lg13,Lg21,Lg22,Lg23,Lg31,Lg32,Lg33,Lg41,Lg42,Lg43,Om0_1,Om0_2,Om0_3,Om1_1,Om1_2,Om1_3,Om2_1,Om2_2,Om2_3,Om3_1,Om3_2,Om3_3,Om4_1,Om4_2,Om4_3,Rj01_1,Rj01_2,Rj01_3,Rj02_1,Rj02_2,Rj02_3,Rj03_1,Rj03_2,Rj03_3,Rj11_1,Rj11_2,Rj11_3,Rj12_1,Rj12_2,Rj12_3,Rj13_1,Rj13_2,Rj13_3,Rj21_1,Rj21_2,Rj21_3,Rj22_1,Rj22_2,Rj22_3,Rj23_1,Rj23_2,Rj23_3,Rj31_1,Rj31_2,Rj31_3,Rj32_1,Rj32_2,Rj32_3,Rj33_1,Rj33_2,Rj33_3,Rj41_1,Rj41_2,Rj41_3,Rj42_1,Rj42_2,Rj42_3,Rj43_1,Rj43_2,Rj43_3,m1,m2,m3,m4,m0u,om1_1,om1_2,om1_3,om2_1,om2_2,om2_3,om3_1,om3_2,om3_3,om4_1,om4_2,om4_3,om0u_1,om0u_2,om0u_3,omd0l_1,omd0l_2,omd0l_3,thd0_1,thd0_2,thd0_3,thd1_1,thd1_2,thd1_3,thd2_1,thd2_2,thd2_3,thd3_1,thd3_2,thd3_3,thd4_1,thd4_2,thd4_3);
-    Itheta = find_Itheta2(I_gcs01_1,I_gcs01_2,I_gcs01_3,I_gcs02_1,I_gcs02_2,I_gcs02_3,I_gcs03_1,I_gcs03_2,I_gcs03_3,I_gcs11_1,I_gcs11_2,I_gcs11_3,I_gcs12_1,I_gcs12_2,I_gcs12_3,I_gcs13_1,I_gcs13_2,I_gcs13_3,I_gcs21_1,I_gcs21_2,I_gcs21_3,I_gcs22_1,I_gcs22_2,I_gcs22_3,I_gcs23_1,I_gcs23_2,I_gcs23_3,I_gcs31_1,I_gcs31_2,I_gcs31_3,I_gcs32_1,I_gcs32_2,I_gcs32_3,I_gcs33_1,I_gcs33_2,I_gcs33_3,I_gcs41_1,I_gcs41_2,I_gcs41_3,I_gcs42_1,I_gcs42_2,I_gcs42_3,I_gcs43_1,I_gcs43_2,I_gcs43_3,L01,L02,L03,L11,L12,L13,L21,L22,L23,L31,L32,L33,L0d1,L0d2,L0d3,Lg01,Lg02,Lg03,Lg11,Lg12,Lg13,Lg21,Lg22,Lg23,Lg31,Lg32,Lg33,Lg41,Lg42,Lg43,Rj01_1,Rj01_2,Rj01_3,Rj02_1,Rj02_2,Rj02_3,Rj03_1,Rj03_2,Rj03_3,Rj11_1,Rj11_2,Rj11_3,Rj12_1,Rj12_2,Rj12_3,Rj13_1,Rj13_2,Rj13_3,Rj21_1,Rj21_2,Rj21_3,Rj22_1,Rj22_2,Rj22_3,Rj23_1,Rj23_2,Rj23_3,Rj31_1,Rj31_2,Rj31_3,Rj32_1,Rj32_2,Rj32_3,Rj33_1,Rj33_2,Rj33_3,Rj41_1,Rj41_2,Rj41_3,Rj42_1,Rj42_2,Rj42_3,Rj43_1,Rj43_2,Rj43_3,m1,m2,m3,m4,m0u);
+    GRA = find_GRA2(L11,L12,L13,L21,L22,L23,L31,L32,L33,L0d1,L0d2,L0d3,Lg01,Lg02,Lg03,Lg11,Lg12,Lg13,Lg21,Lg22,Lg23,Lg31,Lg32,Lg33,Lg41,Lg42,Lg43,g1,g2,g3,m1,m2,m3,m0l,m0u);
+    INT = find_INT2(I_gcs01_1,I_gcs01_2,I_gcs01_3,I_gcs02_1,I_gcs02_2,I_gcs02_3,I_gcs03_1,I_gcs03_2,I_gcs03_3,I_gcs11_1,I_gcs11_2,I_gcs11_3,I_gcs12_1,I_gcs12_2,I_gcs12_3,I_gcs13_1,I_gcs13_2,I_gcs13_3,I_gcs21_1,I_gcs21_2,I_gcs21_3,I_gcs22_1,I_gcs22_2,I_gcs22_3,I_gcs23_1,I_gcs23_2,I_gcs23_3,I_gcs31_1,I_gcs31_2,I_gcs31_3,I_gcs32_1,I_gcs32_2,I_gcs32_3,I_gcs33_1,I_gcs33_2,I_gcs33_3,I_gcs41_1,I_gcs41_2,I_gcs41_3,I_gcs42_1,I_gcs42_2,I_gcs42_3,I_gcs43_1,I_gcs43_2,I_gcs43_3,L01,L02,L03,L11,L12,L13,L21,L22,L23,L31,L32,L33,L0d1,L0d2,L0d3,L0l1,L0l2,L0l3,Lg01,Lg02,Lg03,Lg11,Lg12,Lg13,Lg21,Lg22,Lg23,Lg31,Lg32,Lg33,Lg41,Lg42,Lg43,Lg0l1,Lg0l2,Lg0l3,Om0_1,Om0_2,Om0_3,Om1_1,Om1_2,Om1_3,Om2_1,Om2_2,Om2_3,Om3_1,Om3_2,Om3_3,Om4_1,Om4_2,Om4_3,Rj01_1,Rj01_2,Rj01_3,Rj02_1,Rj02_2,Rj02_3,Rj03_1,Rj03_2,Rj03_3,Rj11_1,Rj11_2,Rj11_3,Rj12_1,Rj12_2,Rj12_3,Rj13_1,Rj13_2,Rj13_3,Rj21_1,Rj21_2,Rj21_3,Rj22_1,Rj22_2,Rj22_3,Rj23_1,Rj23_2,Rj23_3,Rj31_1,Rj31_2,Rj31_3,Rj32_1,Rj32_2,Rj32_3,Rj33_1,Rj33_2,Rj33_3,Rj41_1,Rj41_2,Rj41_3,Rj42_1,Rj42_2,Rj42_3,Rj43_1,Rj43_2,Rj43_3,m1,m2,m3,m0l,m0u,om1_1,om1_2,om1_3,om2_1,om2_2,om2_3,om3_1,om3_2,om3_3,om4_1,om4_2,om4_3,om0l_1,om0l_2,om0l_3,om0u_1,om0u_2,om0u_3,omd0l_1,omd0l_2,omd0l_3,thd0_1,thd0_2,thd0_3,thd1_1,thd1_2,thd1_3,thd2_1,thd2_2,thd2_3,thd3_1,thd3_2,thd3_3,thd4_1,thd4_2,thd4_3);
+    Itheta = find_Itheta2(I_gcs01_1,I_gcs01_2,I_gcs01_3,I_gcs02_1,I_gcs02_2,I_gcs02_3,I_gcs03_1,I_gcs03_2,I_gcs03_3,I_gcs11_1,I_gcs11_2,I_gcs11_3,I_gcs12_1,I_gcs12_2,I_gcs12_3,I_gcs13_1,I_gcs13_2,I_gcs13_3,I_gcs21_1,I_gcs21_2,I_gcs21_3,I_gcs22_1,I_gcs22_2,I_gcs22_3,I_gcs23_1,I_gcs23_2,I_gcs23_3,I_gcs31_1,I_gcs31_2,I_gcs31_3,I_gcs32_1,I_gcs32_2,I_gcs32_3,I_gcs33_1,I_gcs33_2,I_gcs33_3,I_gcs41_1,I_gcs41_2,I_gcs41_3,I_gcs42_1,I_gcs42_2,I_gcs42_3,I_gcs43_1,I_gcs43_2,I_gcs43_3,L01,L02,L03,L11,L12,L13,L21,L22,L23,L31,L32,L33,L0d1,L0d2,L0d3,Lg01,Lg02,Lg03,Lg11,Lg12,Lg13,Lg21,Lg22,Lg23,Lg31,Lg32,Lg33,Lg41,Lg42,Lg43,Rj01_1,Rj01_2,Rj01_3,Rj02_1,Rj02_2,Rj02_3,Rj03_1,Rj03_2,Rj03_3,Rj11_1,Rj11_2,Rj11_3,Rj12_1,Rj12_2,Rj12_3,Rj13_1,Rj13_2,Rj13_3,Rj21_1,Rj21_2,Rj21_3,Rj22_1,Rj22_2,Rj22_3,Rj23_1,Rj23_2,Rj23_3,Rj31_1,Rj31_2,Rj31_3,Rj32_1,Rj32_2,Rj32_3,Rj33_1,Rj33_2,Rj33_3,Rj41_1,Rj41_2,Rj41_3,Rj42_1,Rj42_2,Rj42_3,Rj43_1,Rj43_2,Rj43_3,m1,m2,m3,m0l,m0u);
 
     iItheta = inv(Itheta);
     

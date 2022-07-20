@@ -1,5 +1,7 @@
 function [INT, GRA, Itheta] = GetTorques_omega
     tic
+    addpath('../')
+
     syms m0u m1 m2 m3 m4 
     syms g [3 1] 
     syms I_gcs0 [3 3]
@@ -167,20 +169,20 @@ function [INT, GRA, Itheta] = GetTorques_omega
     RJT3 = formula(subs_pre(RJT3));
     RJT4 = formula(subs_pre(RJT4));
      
-    RJT = [RJT0; RJT1; RJT2; RJT3; RJT4];
+    RJT = [a_tor_; RJT0; RJT1; RJT2; RJT3; RJT4];
 
     fprintf('Equation defined\t')
     toc
     %%
     th2d_ = [formula(th2d0_); formula(th2d1_); formula(th2d2_); formula(th2d3_); formula(th2d4_)];
 
-    [Coeff, Term] = coeffs_Vector(RJT, [th2d_.', g.']);
+    [Coeff, Term] = coeffs_Vector(RJT, [a_tor_.', th2d_.', g.']);
 
     Term
 
-    GRA = -Coeff(:, 16:18) * g;
-    Itheta = Coeff(:, 1:15);
-    INT = -Coeff(:, 19);
+    GRA = -Coeff(:, 19:21) * g;
+    Itheta = Coeff(:, 1:18);
+    INT = -Coeff(:, 22);
 
 %     NET = Itheta * th2d_;
 

@@ -1,10 +1,10 @@
-function [th2d_, th2d_gra, th2d_int] = CompTh2d
+function th2d_ = CompTh2d(iData)
 tic
 addpath('../')
 
 load('NPMEAN.mat');
 
-iData = 1;
+
 
 Constants = GetConstants(ExperimentDatas, iData);
 tDeps = GetTDepend2(ExperimentDatas, iData);
@@ -21,7 +21,6 @@ m2 = Constants.m(4);
 m3 = Constants.m(5);
 m4 = Constants.m(6);
 
-a_tor = tDeps.a_tor;
 
 L0 = tDeps.L0;
 L0d = tDeps.L0d;
@@ -61,18 +60,13 @@ I_gcs2 = tDeps.I_gcs2;
 I_gcs3 = tDeps.I_gcs3;
 I_gcs4 = tDeps.I_gcs4;
 
-th2d0 = tDeps.th2d0;
-th2d1 = tDeps.th2d1;
-th2d2 = tDeps.th2d2;
-th2d3 = tDeps.th2d3;
-th2d4 = tDeps.th2d4;
 Rj0 = tDeps.Rj0;
 Rj1 = tDeps.Rj1;
 Rj2 = tDeps.Rj2;
 Rj3 = tDeps.Rj3;
 Rj4 = tDeps.Rj4;
 
-tau = CompTau2;
+tau = CompTau2(iData);
 
 fprintf('Initialized\n')
 toc
@@ -80,10 +74,6 @@ toc
 tic
 for iFrame = 1 : NUM_FRAME
     iFrame_ = iFrame;
-
-    a_tor_1 = a_tor(1, iFrame_);
-    a_tor_2 = a_tor(2, iFrame_);
-    a_tor_3 = a_tor(3, iFrame_);
     
     L01 = L0(1, iFrame_);
     L02 = L0(2, iFrame_);
@@ -294,26 +284,26 @@ for iFrame = 1 : NUM_FRAME
 
     %%
     GRA = find_GRA2(L11,L12,L13,L21,L22,L23,L31,L32,L33,L0d1,L0d2,L0d3,Lg01,Lg02,Lg03,Lg11,Lg12,Lg13,Lg21,Lg22,Lg23,Lg31,Lg32,Lg33,Lg41,Lg42,Lg43,g1,g2,g3,m1,m2,m3,m4,m0u);
-    INT = find_INT2(I_gcs01_1,I_gcs01_2,I_gcs01_3,I_gcs02_1,I_gcs02_2,I_gcs02_3,I_gcs03_1,I_gcs03_2,I_gcs03_3,I_gcs11_1,I_gcs11_2,I_gcs11_3,I_gcs12_1,I_gcs12_2,I_gcs12_3,I_gcs13_1,I_gcs13_2,I_gcs13_3,I_gcs21_1,I_gcs21_2,I_gcs21_3,I_gcs22_1,I_gcs22_2,I_gcs22_3,I_gcs23_1,I_gcs23_2,I_gcs23_3,I_gcs31_1,I_gcs31_2,I_gcs31_3,I_gcs32_1,I_gcs32_2,I_gcs32_3,I_gcs33_1,I_gcs33_2,I_gcs33_3,I_gcs41_1,I_gcs41_2,I_gcs41_3,I_gcs42_1,I_gcs42_2,I_gcs42_3,I_gcs43_1,I_gcs43_2,I_gcs43_3,L01,L02,L03,L11,L12,L13,L21,L22,L23,L31,L32,L33,L0d1,L0d2,L0d3,Lg01,Lg02,Lg03,Lg11,Lg12,Lg13,Lg21,Lg22,Lg23,Lg31,Lg32,Lg33,Lg41,Lg42,Lg43,Om0_1,Om0_2,Om0_3,Om1_1,Om1_2,Om1_3,Om2_1,Om2_2,Om2_3,Om3_1,Om3_2,Om3_3,Om4_1,Om4_2,Om4_3,Rj01_1,Rj01_2,Rj01_3,Rj02_1,Rj02_2,Rj02_3,Rj03_1,Rj03_2,Rj03_3,Rj11_1,Rj11_2,Rj11_3,Rj12_1,Rj12_2,Rj12_3,Rj13_1,Rj13_2,Rj13_3,Rj21_1,Rj21_2,Rj21_3,Rj22_1,Rj22_2,Rj22_3,Rj23_1,Rj23_2,Rj23_3,Rj31_1,Rj31_2,Rj31_3,Rj32_1,Rj32_2,Rj32_3,Rj33_1,Rj33_2,Rj33_3,Rj41_1,Rj41_2,Rj41_3,Rj42_1,Rj42_2,Rj42_3,Rj43_1,Rj43_2,Rj43_3,a_tor_1,a_tor_2,a_tor_3,m1,m2,m3,m4,m0u,om1_1,om1_2,om1_3,om2_1,om2_2,om2_3,om3_1,om3_2,om3_3,om4_1,om4_2,om4_3,om0u_1,om0u_2,om0u_3,omd0l_1,omd0l_2,omd0l_3,thd0_1,thd0_2,thd0_3,thd1_1,thd1_2,thd1_3,thd2_1,thd2_2,thd2_3,thd3_1,thd3_2,thd3_3,thd4_1,thd4_2,thd4_3);
+    INT = find_INT2(I_gcs01_1,I_gcs01_2,I_gcs01_3,I_gcs02_1,I_gcs02_2,I_gcs02_3,I_gcs03_1,I_gcs03_2,I_gcs03_3,I_gcs11_1,I_gcs11_2,I_gcs11_3,I_gcs12_1,I_gcs12_2,I_gcs12_3,I_gcs13_1,I_gcs13_2,I_gcs13_3,I_gcs21_1,I_gcs21_2,I_gcs21_3,I_gcs22_1,I_gcs22_2,I_gcs22_3,I_gcs23_1,I_gcs23_2,I_gcs23_3,I_gcs31_1,I_gcs31_2,I_gcs31_3,I_gcs32_1,I_gcs32_2,I_gcs32_3,I_gcs33_1,I_gcs33_2,I_gcs33_3,I_gcs41_1,I_gcs41_2,I_gcs41_3,I_gcs42_1,I_gcs42_2,I_gcs42_3,I_gcs43_1,I_gcs43_2,I_gcs43_3,L01,L02,L03,L11,L12,L13,L21,L22,L23,L31,L32,L33,L0d1,L0d2,L0d3,Lg01,Lg02,Lg03,Lg11,Lg12,Lg13,Lg21,Lg22,Lg23,Lg31,Lg32,Lg33,Lg41,Lg42,Lg43,Om0_1,Om0_2,Om0_3,Om1_1,Om1_2,Om1_3,Om2_1,Om2_2,Om2_3,Om3_1,Om3_2,Om3_3,Om4_1,Om4_2,Om4_3,Rj01_1,Rj01_2,Rj01_3,Rj02_1,Rj02_2,Rj02_3,Rj03_1,Rj03_2,Rj03_3,Rj11_1,Rj11_2,Rj11_3,Rj12_1,Rj12_2,Rj12_3,Rj13_1,Rj13_2,Rj13_3,Rj21_1,Rj21_2,Rj21_3,Rj22_1,Rj22_2,Rj22_3,Rj23_1,Rj23_2,Rj23_3,Rj31_1,Rj31_2,Rj31_3,Rj32_1,Rj32_2,Rj32_3,Rj33_1,Rj33_2,Rj33_3,Rj41_1,Rj41_2,Rj41_3,Rj42_1,Rj42_2,Rj42_3,Rj43_1,Rj43_2,Rj43_3,m1,m2,m3,m4,m0u,om1_1,om1_2,om1_3,om2_1,om2_2,om2_3,om3_1,om3_2,om3_3,om4_1,om4_2,om4_3,om0u_1,om0u_2,om0u_3,omd0l_1,omd0l_2,omd0l_3,thd0_1,thd0_2,thd0_3,thd1_1,thd1_2,thd1_3,thd2_1,thd2_2,thd2_3,thd3_1,thd3_2,thd3_3,thd4_1,thd4_2,thd4_3);
     Itheta = find_Itheta2(I_gcs01_1,I_gcs01_2,I_gcs01_3,I_gcs02_1,I_gcs02_2,I_gcs02_3,I_gcs03_1,I_gcs03_2,I_gcs03_3,I_gcs11_1,I_gcs11_2,I_gcs11_3,I_gcs12_1,I_gcs12_2,I_gcs12_3,I_gcs13_1,I_gcs13_2,I_gcs13_3,I_gcs21_1,I_gcs21_2,I_gcs21_3,I_gcs22_1,I_gcs22_2,I_gcs22_3,I_gcs23_1,I_gcs23_2,I_gcs23_3,I_gcs31_1,I_gcs31_2,I_gcs31_3,I_gcs32_1,I_gcs32_2,I_gcs32_3,I_gcs33_1,I_gcs33_2,I_gcs33_3,I_gcs41_1,I_gcs41_2,I_gcs41_3,I_gcs42_1,I_gcs42_2,I_gcs42_3,I_gcs43_1,I_gcs43_2,I_gcs43_3,L01,L02,L03,L11,L12,L13,L21,L22,L23,L31,L32,L33,L0d1,L0d2,L0d3,Lg01,Lg02,Lg03,Lg11,Lg12,Lg13,Lg21,Lg22,Lg23,Lg31,Lg32,Lg33,Lg41,Lg42,Lg43,Rj01_1,Rj01_2,Rj01_3,Rj02_1,Rj02_2,Rj02_3,Rj03_1,Rj03_2,Rj03_3,Rj11_1,Rj11_2,Rj11_3,Rj12_1,Rj12_2,Rj12_3,Rj13_1,Rj13_2,Rj13_3,Rj21_1,Rj21_2,Rj21_3,Rj22_1,Rj22_2,Rj22_3,Rj23_1,Rj23_2,Rj23_3,Rj31_1,Rj31_2,Rj31_3,Rj32_1,Rj32_2,Rj32_3,Rj33_1,Rj33_2,Rj33_3,Rj41_1,Rj41_2,Rj41_3,Rj42_1,Rj42_2,Rj42_3,Rj43_1,Rj43_2,Rj43_3,m1,m2,m3,m4,m0u);
-
-    th2d = [th2d0(:, iFrame_); th2d1(:, iFrame_); th2d2(:, iFrame_); th2d3(:, iFrame_); th2d4(:, iFrame_)];
 
     iItheta = inv(Itheta);
     
-    for j = 1 : 15
-        for i = 1 : 15
+    tmp_gra = Itheta \ GRA;
+    tmp_int = Itheta \ INT;
+
+    for j = 1 : 18
+        for i = 1 : 18
             th2d_(j).tau(i, iFrame_) = iItheta(j, i) .* Tau_(i);
         end
-    end
-    th2d_gra(:, iFrame_) = Itheta \ GRA;
-    th2d_int(:, iFrame_) = Itheta \ INT;
 
+        th2d_(j).tau(19, iFrame_) = tmp_gra(j);
+        th2d_(j).tau(20, iFrame_) = tmp_int(j);
+
+    end
 
     fprintf('Number %d done.\n', iFrame)
     
-
-
 end
 toc
 end

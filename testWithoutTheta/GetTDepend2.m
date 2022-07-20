@@ -42,6 +42,7 @@ function tDeps = GetTDepend2(ExperimentDatas, iData)
     tDeps.Rj3 = WrCS;
     tDeps.Rj4 = RhCS;
 
+    tr = ExperimentDatas(iData).n.troC;
     ri = ExperimentDatas(iData).n.ribC;
     sh = ExperimentDatas(iData).n.shR;
     el = ExperimentDatas(iData).n.elbR;
@@ -49,12 +50,14 @@ function tDeps = GetTDepend2(ExperimentDatas, iData)
     rh = RacketSegdat.n(22:24, :);
     to = ExperimentDatas(iData).n.Top;
 
+    tDeps.L0l = ri - tr;
     tDeps.L0 = sh - ri;
     tDeps.L1 = el - sh;
     tDeps.L2 = wr - el;
     tDeps.L3 = rh - wr;
     tDeps.L4 = to - rh;
 
+    tDeps.Lg0l = ExperimentDatas(iData).cgdat(15).cg - tr;
     tDeps.Lg0 = ExperimentDatas(iData).cgdat(14).cg - ri;
     tDeps.Lg1 = ExperimentDatas(iData).cgdat(3).cg - sh;
     tDeps.Lg2 = ExperimentDatas(iData).cgdat(2).cg - el;
@@ -197,7 +200,7 @@ function tDeps = GetTDepend2(ExperimentDatas, iData)
     th2d3 = dif3(thd3, NUM_FRAME, 1/200) - cross(Om3, thd3, 1);
     th2d4 = dif3(thd4, NUM_FRAME, 1/200) - cross(Om4, thd4, 1); 
 
-    r_tor = ExperimentDatas(iData).n.ribC;
+    r_tor = tr;
     v_tor = dif3(r_tor, NUM_FRAME, 1/200);
     a_tor = dif3(v_tor, NUM_FRAME, 1/200);
 

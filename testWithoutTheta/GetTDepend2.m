@@ -22,8 +22,8 @@ function tDeps = GetTDepend2(ExperimentDatas, iData)
     RhCS = nan(3, 3, NUM_FRAME);
 
     for iFrame = 1 : NUM_FRAME
-        lTorCS(:, :, iFrame) = SCS(14).Var(iFrame).R; % left, back, up
-        uTorCS(:, :, iFrame) = SCS(15).Var(iFrame).R;
+        lTorCS(:, :, iFrame) = SCS(15).Var(iFrame).R; % left, back, up
+        uTorCS(:, :, iFrame) = SCS(14).Var(iFrame).R;
         UaCS(:, :, iFrame) = SCS(3).Var(iFrame).R; % out-in, z X x, ua long
         FaCS(:, :, iFrame) = SCS(2).Var(iFrame).R; % rad-ul, z X x, fa long
         HdCS(:, :, iFrame) = SCS(1).Var(iFrame).R; % rad-ul, z X x, hd long

@@ -1,8 +1,6 @@
-function Tau = CompTau2(iData)
+function Tau = CompTau2(ExperimentDatas, iData)
 tic
 addpath('../')
-
-load('NPMEAN.mat');
 
 Constants = GetConstants2(ExperimentDatas, iData);
 tDeps = GetTDepend2(ExperimentDatas, iData);

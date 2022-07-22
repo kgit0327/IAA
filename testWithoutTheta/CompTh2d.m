@@ -1,4 +1,4 @@
-function th2d_ = CompTh2d(iData)
+function th2d_ = CompTh2d(ExperimentDatas, iData)
 tic
 addpath('../')
 
@@ -68,7 +68,7 @@ Rj2 = tDeps.Rj2;
 Rj3 = tDeps.Rj3;
 Rj4 = tDeps.Rj4;
 
-tau = CompTau2(iData);
+tau = CompTau2(ExperimentDatas, iData);
 
 fprintf('Initialized\n')
 toc

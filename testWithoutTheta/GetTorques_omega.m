@@ -9,7 +9,6 @@ function [INT, GRA, Itheta] = GetTorques_omega
     syms I_gcs3 [3 3] 
     syms I_gcs4 [3 3]
 
-
     syms a0(t) [3 1]
     syms thd0(t) [3 1]
     syms thd1(t) [3 1]

@@ -16,8 +16,8 @@ for iDataNum = 1 : 3
     for iDoF = 1 : 18
         for j = 1 : 20
             for iPeriod = 1 : size(GC2RMFrame(iData).GC2RM, 2)
-                [GC, ~, ~, RM] = GetTiming(ExperimentDatas, GC2RMFrame, iData, iPeriod);
-                Datas(iDataNum).thd_(iDoF).tau(j, iPeriod) = simpson(Datas(iDataNum).th2d_(iDoF).tau(j, GC : RM), 1 / 200);
+                [GC, MER, RLP, RM] = GetTiming(ExperimentDatas, GC2RMFrame, iData, iPeriod);
+                Datas(iDataNum).thd_(iDoF).tau(j, iPeriod) = simpson(Datas(iDataNum).th2d_(iDoF).tau(j, RLP : RM), 1 / 200);
             end
         end
     end
@@ -36,8 +36,10 @@ end
         LABEL = categorical({'FB', 'LR', 'UD', 'tEF', 'tLu', 'tLr', 'sAb', 'sEF', 'sIr', 'eFE', 'eAb', 'eEr', 'wPf', 'wAb', 'wIr', 'rAb', 'rEF', 'rIr', 'IN', 'GR'});
         LABEL = reordercats(LABEL, {'FB', 'LR', 'UD', 'tEF', 'tLu', 'tLr', 'sAb', 'sEF', 'sIr', 'eFE', 'eAb', 'eEr', 'wPf', 'wAb', 'wIr', 'rAb', 'rEF', 'rIr', 'IN', 'GR'});
 
+        t = tiledlayout(6, 3, 'TileSpacing', 'compact');
+
         for iDoF = 1 : 18
-            figure
+            nexttile
             hold on
             bar(LABEL, thd(iDoF).mean, 'FaceColor', 'flat');
 %                 for ith2d = 1 : 20
@@ -55,8 +57,8 @@ end
                 x = (1:ngroups) - groupwidth/2 + (2*i-1) * groupwidth / (2*nbars);
                 errorbar(x, y(:,i), err(:,i), '.');
             end
-            legend('0 bpm', '35 bpm', '50 bpm')
-            set(gca, 'FontSize', 28)
+%             legend('0 bpm', '35 bpm', '50 bpm')
+%             set(gca, 'FontSize', 28)
             title(LABEL(1, iDoF))
             hold off
         end

@@ -193,9 +193,10 @@ function [INT, GRA, Itheta] = GetTorques_omega
     RJT3 = formula(subs_pre(RJT3));
     RJT4 = formula(subs_pre(RJT4));
 
-    F0 = formula(subs_pre(F0));
+    F = m0u * ag0;
+    F = formula(subs_pre(F));
      
-    RJT = [F0; RJT0; RJT1; RJT2; RJT3; RJT4];
+    RJT = [F; RJT0; RJT1; RJT2; RJT3; RJT4];
 
     fprintf('Equation defined\t')
     toc

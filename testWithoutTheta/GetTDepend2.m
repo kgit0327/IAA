@@ -1,7 +1,7 @@
 function tDeps = GetTDepend2(ExperimentDatas, iData)
 
     RacketSegdat = GetRacketSegmentData(ExperimentDatas, iData);
-    Constants = GetConstants(ExperimentDatas, iData);
+    Constants = GetConstants2(ExperimentDatas, iData);
     
     NUM_FRAME = ExperimentDatas(iData).nFr;
 
@@ -22,17 +22,17 @@ function tDeps = GetTDepend2(ExperimentDatas, iData)
     RhCS = nan(3, 3, NUM_FRAME);
 
     for iFrame = 1 : NUM_FRAME
-        lTorCS(:, :, iFrame) = SCS(14).Var(iFrame).R; % left, back, up
-        uTorCS(:, :, iFrame) = SCS(15).Var(iFrame).R;
+        lTorCS(:, :, iFrame) = SCS(15).Var(iFrame).R; % left, back, up
+        uTorCS(:, :, iFrame) = SCS(14).Var(iFrame).R;
         UaCS(:, :, iFrame) = SCS(3).Var(iFrame).R; % out-in, z X x, ua long
         FaCS(:, :, iFrame) = SCS(2).Var(iFrame).R; % rad-ul, z X x, fa long
         HdCS(:, :, iFrame) = SCS(1).Var(iFrame).R; % rad-ul, z X x, hd long
         RaCS(:, :, iFrame) = RacketSegdat.Var(iFrame).R; 
 
         TrCS(:, :, iFrame) = Unit(5).JCS(2).Var(iFrame).R;
-        ShCS(:, :, iFrame) = Unit(1).JCS(3).Var(iFrame).R;
+        ShCS(:, :, iFrame) = Unit(1).JCS(1).Var(iFrame).R;
         ElCS(:, :, iFrame) = Unit(1).JCS(2).Var(iFrame).R;
-        WrCS(:, :, iFrame) = Unit(1).JCS(1).Var(iFrame).R;
+        WrCS(:, :, iFrame) = Unit(1).JCS(3).Var(iFrame).R;
         RhCS(:, :, iFrame) = RacketSegdat.Var(iFrame).R;
     end
 
@@ -90,8 +90,6 @@ function tDeps = GetTDepend2(ExperimentDatas, iData)
         tDeps.I_gcs3(:, :, iFrame) = HdCS(:, :, iFrame) * diag([I_31, I_32, I_33]) * HdCS(:, :, iFrame).';
         tDeps.I_gcs4(:, :, iFrame) = RaCS(:, :, iFrame) * diag([I_41, I_42, I_43]) * RaCS(:, :, iFrame).';
     end
-
-
 
     duTorCS = GetDiffR(uTorCS);
     dlTorCS = GetDiffR(lTorCS);
@@ -188,19 +186,33 @@ function tDeps = GetTDepend2(ExperimentDatas, iData)
     tDeps.omd0l = dif3(om0l, NUM_FRAME, 1/200);
     
 
-    thd0 = om0u - om0l;
-    thd1 = om1 - om0u;
-    thd2 = om2 - om1;
-    thd3 = om3 - om2;
-    thd4 = om4 - om3;
+    thd0_gcs = om0u - om0l;
+    thd1_gcs = om1 - om0u;
+    thd2_gcs = om2 - om1;
+    thd3_gcs = om3 - om2;
+    thd4_gcs = om4 - om3;
 
-    th2d0 = dif3(thd0, NUM_FRAME, 1/200) - cross(Om0, thd0, 1);
-    th2d1 = dif3(thd1, NUM_FRAME, 1/200) - cross(Om1, thd1, 1);
-    th2d2 = dif3(thd2, NUM_FRAME, 1/200) - cross(Om2, thd2, 1);
-    th2d3 = dif3(thd3, NUM_FRAME, 1/200) - cross(Om3, thd3, 1);
-    th2d4 = dif3(thd4, NUM_FRAME, 1/200) - cross(Om4, thd4, 1); 
+    thd0 = nan(3, NUM_FRAME);
+    thd1 = nan(3, NUM_FRAME);
+    thd2 = nan(3, NUM_FRAME);
+    thd3 = nan(3, NUM_FRAME);
+    thd4 = nan(3, NUM_FRAME);
 
-    r_tor = tr;
+    for iFrame = 1 : NUM_FRAME
+        thd0(:, iFrame) = TrCS(:, :, iFrame) \ thd0_gcs(:, iFrame);
+        thd1(:, iFrame) = ShCS(:, :, iFrame) \ thd1_gcs(:, iFrame);
+        thd2(:, iFrame) = ElCS(:, :, iFrame) \ thd2_gcs(:, iFrame);
+        thd3(:, iFrame) = WrCS(:, :, iFrame) \ thd3_gcs(:, iFrame);
+        thd4(:, iFrame) = RhCS(:, :, iFrame) \ thd4_gcs(:, iFrame);
+    end
+
+    th2d0 = dif3(thd0, NUM_FRAME, 1 / 200);
+    th2d1 = dif3(thd1, NUM_FRAME, 1 / 200);
+    th2d2 = dif3(thd2, NUM_FRAME, 1 / 200);
+    th2d3 = dif3(thd3, NUM_FRAME, 1 / 200);
+    th2d4 = dif3(thd4, NUM_FRAME, 1 / 200);
+
+    r_tor = ri;
     v_tor = dif3(r_tor, NUM_FRAME, 1/200);
     a_tor = dif3(v_tor, NUM_FRAME, 1/200);
 

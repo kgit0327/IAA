@@ -1,6 +1,5 @@
 function [INT, GRA, Itheta] = GetTorques_omega
     tic
-    addpath('../')
 
     syms m0l m0u m1 m2 m3 m4 
     syms g [3 1] 
@@ -10,8 +9,7 @@ function [INT, GRA, Itheta] = GetTorques_omega
     syms I_gcs3 [3 3] 
     syms I_gcs4 [3 3]
 
-
-    syms a0l(t) [3 1]
+    syms a0(t) [3 1]
     syms thd0(t) [3 1]
     syms thd1(t) [3 1]
     syms thd2(t) [3 1]
@@ -34,7 +32,7 @@ function [INT, GRA, Itheta] = GetTorques_omega
     syms Om3(t) [3 1]
     syms Om4(t) [3 1]
 
-    syms a0l_ [3 1] real
+    syms a0_ [3 1] real
     syms thd0_ [3 1] real
     syms thd1_ [3 1] real
     syms thd2_ [3 1] real
@@ -83,14 +81,14 @@ function [INT, GRA, Itheta] = GetTorques_omega
     toc
 
     subs_var_pre = [
-                    a0l, diff(om0l, t), om0l,          ...
+                    a0, diff(om0l, t), om0l,          ...
                      thd0,  thd1,  thd2,  thd3,  thd4, ...
                     th2d0, th2d1, th2d2, th2d3, th2d4, ...
                      om0u,   om1,   om2,   om3,   om4, ...
                       Om0,   Om1,   Om2,   Om3,   Om4];
 
     subs_var_post = [
-                     a0l_, omd0l_, om0l_,                   ...
+                     a0_, omd0l_, om0l_,                   ...
                      thd0_,  thd1_,  thd2_,  thd3_,  thd4_, ...
                     th2d0_, th2d1_, th2d2_, th2d3_, th2d4_, ...
                      om0u_,   om1_,   om2_,   om3_,   om4_, ...
@@ -105,8 +103,6 @@ function [INT, GRA, Itheta] = GetTorques_omega
     A3 = cross(Om3, Rj3 * thd3);
     A4 = cross(Om4, Rj4 * thd4);
     
-    B0l = cross(om0l, cross(om0l, L0l));
-    Bg0l = cross(om0l, cross(om0l, Lg0l));
     B0 = cross(om0u, cross(om0u, L0));
     Bg0 = cross(om0u, cross(om0u, Lg0));
     B1 = cross(om1, cross(om1, L1));
@@ -134,7 +130,7 @@ function [INT, GRA, Itheta] = GetTorques_omega
     omd3  = omd2  + Rj3 * th2d3 + A3;
     omd4  = omd3  + Rj4 * th2d4 + A4;
 
-    a0 = a0l + cross(omd0l, L0l) + B0l;
+%     a0 = a0l + cross(omd0l, L0l) + B0l;
     a1 = a0  + cross(omd0, L0)   + B0;
     a2 = a1  + cross(omd1, L1)   + B1;
     a3 = a2  + cross(omd2, L2)   + B2;
@@ -151,27 +147,45 @@ function [INT, GRA, Itheta] = GetTorques_omega
 
     %%
     tic
-%     F0 =    - m0l * (ag0l - g);
-%     F1 = F0 - m0u * (ag0 - g);
-%     F2 = F1 -  m1 * (ag1 - g);
-%     F3 = F2 -  m2 * (ag2 - g);
-%     F4 = F3 -  m3 * (ag3 - g);
+    syms F0 F1 F2 F3 F4 [3 1] real
+    f_eq = [
+        F0 == F1 + m0u * (ag0 - g);
+        F1 == F2 + m1  * (ag1 - g);
+        F2 == F3 + m2  * (ag2 - g);
+        F3 == F4 + m3  * (ag3 - g);
+        F4 ==      m4  * (ag4 - g)];
 
-    F4 =      m4  * (ag4 - g);
-    F3 = F4 + m3  * (ag3 - g);
-    F2 = F3 + m2  * (ag2 - g);
-    F1 = F2 + m1  * (ag1 - g);
-    F0 = F1 + m0u * (ag0 - g);
+    [A, B] = equationsToMatrix(f_eq, [F0, F1, F2, F3, F4]);
+    F_solved = linsolve(A, B);
+    
+    F0 = F_solved(1 : 3, :);
+    F1 = F_solved(4 : 6, :);
+    F2 = F_solved(7 : 9, :);
+    F3 = F_solved(10 : 12, :);
+    F4 = F_solved(13 : 15, :);
 
     fprintf('F defined\t')
     toc
     
     tic
-    RJT4 = I_gcs4*omd4+cross(om4,  (I_gcs4 * om4))         - cross(-Lg4, F4);
-    RJT3 = I_gcs3*omd3+cross(om3,  (I_gcs3 * om3))  + RJT4 - cross(-Lg3, F3) - cross((L3-Lg3), -F4);
-    RJT2 = I_gcs2*omd2+cross(om2,  (I_gcs2 * om2))  + RJT3 - cross(-Lg2, F2) - cross((L2-Lg2), -F3);
-    RJT1 = I_gcs1*omd1+cross(om1,  (I_gcs1 * om1))  + RJT2 - cross(-Lg1, F1) - cross((L1-Lg1), -F2);
-    RJT0 = I_gcs0*omd0+cross(om0u, (I_gcs0 * om0u)) + RJT1 - cross(-Lg0, F0) - cross(L0d, -F1);
+
+    syms RJT0 RJT1 RJT2 RJT3 RJT4 [3 1] real
+    RJT_eq = [
+        RJT0 == I_gcs0 * omd0 + cross(om0u, (I_gcs0 * om0u)) + RJT1 - cross(-Lg0, F0) - cross((L0 - Lg0), -F1);
+        RJT1 == I_gcs1 * omd1 + cross( om1, (I_gcs1 *  om1)) + RJT2 - cross(-Lg1, F1) - cross((L1 - Lg1), -F2);
+        RJT2 == I_gcs2 * omd2 + cross( om2, (I_gcs2 *  om2)) + RJT3 - cross(-Lg2, F2) - cross((L2 - Lg2), -F3);
+        RJT3 == I_gcs3 * omd3 + cross( om3, (I_gcs3 *  om3)) + RJT4 - cross(-Lg3, F3) - cross((L3 - Lg3), -F4);
+        RJT4 == I_gcs4 * omd4 + cross( om4, (I_gcs4 *  om4))        - cross(-Lg4, F4);
+        ];
+    
+    [A, B] = equationsToMatrix(RJT_eq, [RJT0, RJT1, RJT2, RJT3, RJT4]);
+    RJT_solved = linsolve(A, B);
+
+    RJT0 = RJT_solved(1 : 3, :);
+    RJT1 = RJT_solved(4 : 6, :);
+    RJT2 = RJT_solved(7 : 9, :);
+    RJT3 = RJT_solved(10 : 12, :);
+    RJT4 = RJT_solved(13 : 15, :);
 
     RJT0 = formula(subs_pre(RJT0));
     RJT1 = formula(subs_pre(RJT1));
@@ -179,14 +193,17 @@ function [INT, GRA, Itheta] = GetTorques_omega
     RJT3 = formula(subs_pre(RJT3));
     RJT4 = formula(subs_pre(RJT4));
 
-    F0 = formula(subs_pre(F0));
+    F = m0u * ag0;
+    F = formula(subs_pre(F));
      
-    RJT = [F0; RJT0; RJT1; RJT2; RJT3; RJT4];
+    RJT = [F; RJT0; RJT1; RJT2; RJT3; RJT4];
 
     fprintf('Equation defined\t')
     toc
     %%
-    th2d_ = [formula(a0l_); formula(th2d0_); formula(th2d1_); formula(th2d2_); formula(th2d3_); formula(th2d4_)];
+    th2d_ = [formula(a0_); formula(th2d0_); formula(th2d1_); formula(th2d2_); formula(th2d3_); formula(th2d4_)];
+
+    addpath('../')
 
     [Coeff, Term] = coeffs_Vector(RJT, [th2d_.', g.']);
 

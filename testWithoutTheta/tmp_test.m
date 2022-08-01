@@ -1,5 +1,5 @@
 addpath('../')
-iData = 10;
+iData = 1;
 
 load('ExpData.mat')
 
@@ -83,6 +83,12 @@ for iFrame = 1 : NUM_FRAME
     th2d2_g(:, iFrame) = Rj2(:, :, iFrame) * th2d2(:, iFrame);
     th2d3_g(:, iFrame) = Rj3(:, :, iFrame) * th2d3(:, iFrame);
     th2d4_g(:, iFrame) = Rj4(:, :, iFrame) * th2d4(:, iFrame);
+
+    L0_s(:, iFrame) = Rj0(:, :, iFrame) \ L0(:, iFrame);
+    L1_s(:, iFrame) = Rj1(:, :, iFrame) \ L1(:, iFrame);
+    L2_s(:, iFrame) = Rj2(:, :, iFrame) \ L2(:, iFrame);
+    L3_s(:, iFrame) = Rj3(:, :, iFrame) \ L3(:, iFrame);
+
 end
 
 A0 = cross(Om0, thd0_g);
@@ -118,6 +124,28 @@ omd2  = omd1  + th2d2_g + A2;
 omd3  = omd2  + th2d3_g + A3;
 omd4  = omd3  + th2d4_g + A4;
 
+Ld0_s = dif3(L0_s, NUM_FRAME, 1 / 200);
+Ld1_s = dif3(L1_s, NUM_FRAME, 1 / 200);
+Ld2_s = dif3(L2_s, NUM_FRAME, 1 / 200);
+Ld3_s = dif3(L3_s, NUM_FRAME, 1 / 200);
+
+L2d0_s = dif3(Ld0_s, NUM_FRAME, 1 / 200);
+L2d1_s = dif3(Ld1_s, NUM_FRAME, 1 / 200);
+L2d2_s = dif3(Ld2_s, NUM_FRAME, 1 / 200);
+L2d3_s = dif3(Ld3_s, NUM_FRAME, 1 / 200);
+
+for iFrame = 1 : NUM_FRAME
+    Ld0(:, iFrame) = Rj0(:, :, iFrame) * Ld0_s(:, iFrame);
+    Ld1(:, iFrame) = Rj1(:, :, iFrame) * Ld1_s(:, iFrame);
+    Ld2(:, iFrame) = Rj2(:, :, iFrame) * Ld2_s(:, iFrame);
+    Ld3(:, iFrame) = Rj3(:, :, iFrame) * Ld3_s(:, iFrame);
+
+    L2d0(:, iFrame) = Rj0(:, :, iFrame) * L2d0_s(:, iFrame);
+    L2d1(:, iFrame) = Rj1(:, :, iFrame) * L2d1_s(:, iFrame);
+    L2d2(:, iFrame) = Rj2(:, :, iFrame) * L2d2_s(:, iFrame);
+    L2d3(:, iFrame) = Rj3(:, :, iFrame) * L2d3_s(:, iFrame);
+end
+
 %     a0 = a0l + cross(omd0l, L0l) + B0l;
 a1 = a0  + cross(omd0, L0)   + B0;
 a2 = a1  + cross(omd1, L1)   + B1;
@@ -129,6 +157,15 @@ ag1 = a1 + cross(omd1, Lg1) + Bg1;
 ag2 = a2 + cross(omd2, Lg2) + Bg2;
 ag3 = a3 + cross(omd3, Lg3) + Bg3;
 ag4 = a4 + cross(omd4, Lg4) + Bg4;
+
+g = [0; 0; -9.807];
+
+F4 = m4  * (ag4 - g);
+F3 = F4 + m3  * (ag3 - g);
+F2 = F3 + m2  * (ag2 - g);
+F1 = F2 + m1  * (ag1 - g);
+F0 = F1 + m0u  * (ag0 - g);
+
 
 %%
 tr = ExperimentDatas(iData).n.troC;
@@ -165,12 +202,22 @@ omd4_ = dif3(om4_, NUM_FRAME, 1 / 200);
 th0_ = ExperimentDatas(iData).Unit(5).JA(4 : 6, :);
 th1_ = ExperimentDatas(iData).Unit(1).JA(1 : 3, :);
 
+FN = GetFN(ExperimentDatas, iData);
+
+F0_ = FN(5, 2).F;
+F1_ = FN(1, 1).F;
+F2_ = FN(1, 2).F;
+F3_ = FN(1, 3).F;
+F4_ = FN(5, 3).F;
+
 
 [GC, MER, RLP, RM] = GetTiming(ExperimentDatas, GC2RMFrame, iData, 2);
 
 dummy = nan(3, NUM_FRAME);
 
-PlotComp(a1, a1_, GC, RM)
+PlotComp(F3, F3_, GC, RM)
+
+dockfig('all')
 
 function PlotComp(Data1, Data2, GC, RM)
     figure

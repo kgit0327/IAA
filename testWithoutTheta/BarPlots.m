@@ -1,6 +1,6 @@
 addpath('../')
 
-load('ExpData.mat')
+% load('ExpData.mat')
 
 DataNum = [10, 1, 9];
 
@@ -63,4 +63,4 @@ end
             hold off
         end
 
-dockfig('all')
+% dockfig('all')

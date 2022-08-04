@@ -3,7 +3,7 @@ iPeriod = 1;
 
 [GC, MER, RLP, RM] = GetTiming(ExperimentDatas, GC2RMFrame, iData, iPeriod);
 
-RJT = Tau(GC : RM);
+RJT = Datas(1).tau(GC : RM);
 Constants = GetConstants(ExperimentDatas, iData);
 r_tor = ExperimentDatas(iData).n.ribC;
 
@@ -26,4 +26,4 @@ INIT = [th0.', thd0.', th1.', thd1.', th2.', thd2.', th3.', thd3.', th4.', thd4.
 
 
 
-[t, q] = ode45(@(t, q) OdeFunc(t, q, RJT, r_tor, Constants), [GC RM], INIT);
+[t, q] = ode45(@(t, q) OdeFunc2(t, q, RJT, r_tor, Constants), [GC RM], INIT);

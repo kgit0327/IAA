@@ -212,7 +212,7 @@ function tDeps = GetTDepend2(ExperimentDatas, iData)
     th2d3 = dif3(thd3, NUM_FRAME, 1 / 200);
     th2d4 = dif3(thd4, NUM_FRAME, 1 / 200);
 
-    r_tor = ri;
+    r_tor = ExperimentDatas(iData).cgdat(15).cg;
     v_tor = dif3(r_tor, NUM_FRAME, 1/200);
     a_tor = dif3(v_tor, NUM_FRAME, 1/200);
 

@@ -5,6 +5,7 @@ close
 load IAA_data.mat
 
 addpath('../')
+addpath('../../')
 
 IAADatas = struct('tau', [], 'th2d_', [], 'thd_', []);
 

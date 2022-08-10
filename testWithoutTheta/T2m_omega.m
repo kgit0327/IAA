@@ -1,4 +1,7 @@
-clear all
+clear
+clc
+close all
+
 tic
 [INT, GRA, Itheta] = GetTorques_omega;
 toc

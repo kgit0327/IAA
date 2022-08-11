@@ -47,25 +47,21 @@ for iDoF = 1 : 6
 
     t = tiledlayout(3, 1, 'TileSpacing', 'compact');
 
-    nexttile    
-    PlotBars(thd, iDoF * 3 - 2, LABEL)
-    
-    nexttile    
-    PlotBars(thd, iDoF * 3 - 1, LABEL)
+    nexttile
+    hold on
+    PlotBars(thd, iDoF * 3 - 2)
 
-    nexttile    
-    PlotBars(thd, iDoF * 3, LABEL)
-
-    lgd = legend('0 bpm', '35 bpm', '50 bpm', 'Orientation', 'horizontal');
-    lgd.Layout.Tile = 'north';
+    set(gca, 'FontSize', 28)
+    title(LABEL(1, iDoF))
+    hold off
 end
 
-
+lgd = legend('0 bpm', '35 bpm', '50 bpm', 'Orientation', 'horizontal');
+lgd.Layout.Tile = 'north';
 
 dockfig('all')
 
-function PlotBars(thd, iDoF, LABEL)
-    hold on
+function PlotBars(thd, iDoF)
     bar(LABEL, thd(iDoF).mean, 'FaceColor', 'flat');
     
     y = thd(iDoF).mean;
@@ -79,9 +75,4 @@ function PlotBars(thd, iDoF, LABEL)
         x = (1:ngroups) - groupwidth/2 + (2*i-1) * groupwidth / (2*nbars);
         errorbar(x, y(:,i), err(:,i), '.');
     end
-
-    set(gca, 'FontSize', 28)
-    title(LABEL(1, iDoF))
-
-    hold off
 end

@@ -311,8 +311,8 @@ for iFrame = 1 : NUM_FRAME
             th2d_(j).tau(i, iFrame_) = iItheta(j, i) .* Tau_(i);
         end
 
-        th2d_(j).tau(19, iFrame_) = tmp_gra(j);
-        th2d_(j).tau(20, iFrame_) = tmp_int(j);
+        th2d_(j).tau(19, iFrame_) = tmp_int(j);
+        th2d_(j).tau(20, iFrame_) = tmp_gra(j);
 
     end
 

@@ -1,14 +1,16 @@
-function PlotVelocityContribution(iData, LineStyle)
+
 addpath('../')
 addpath('../../')
 load IAA_data.mat
 
+iData = 3;
 
 NUM_FRAME = ExpDat(iData).nFr;
 
 RacketSegdat = GetRacketSegmentData(ExpDat, iData);
 tDeps = GetTDepend2(ExpDat, iData);
 
+tr = ExpDat(iData).n.troC;
 ri = ExpDat(iData).n.ribC;
 sh = ExpDat(iData).n.shR;
 el = ExpDat(iData).n.elbR;
@@ -67,7 +69,16 @@ end
 
 Vg0l = dif3(rg0l, NUM_FRAME, 1 / 200);
 
+Vto = dif3(to, NUM_FRAME, 1 / 200);
+
 V0l = cross(om0l, (to - rg0l));
+V0u = cross(thd0_gcs, (to - ri));
+V1 = cross(thd1_gcs, (to - sh));
+V2 = cross(thd2_gcs, (to - el));
+V3 = cross(thd3_gcs, (to - wr));
+V4 = cross(thd4_gcs, (to - rh));
+
+Vto_ = Vg0l + V0l + V0u + V1 + V2 + V3 + V4;
 
 V0u_Ex = cross(thd0_Ex, (to - ri));
 V0u_Lu = cross(thd0_Lu, (to - ri));
@@ -99,33 +110,33 @@ c = [1, 0.25, 0.1; 1, 1, 0; 0.1, 0.5, 0.1; 0, 0.55, 1; 0.45, 1, 1; 1, 0.45, 0.65
      0.45, 0.1, 0; 1, 0.75, 0.85; 1, 1, 0.6; 0.2, 1, 0.1; 0.7, 1, 1; 1, 0.75, 0.55; 0.55, 1, 0.55; 0.75, 0.7, 1; ...
      0, 0, 0; 0.78, 0.78, 0.79; 0.6, 0.6, 0.2; 0.51, 0.56, 0.61];
 
-
+figure
 hold on
 
 
-plot((GC - RM) / 200 : 1 / 200 : 0, V0u_Ex(1, GC : RM), 'Color', c(4, :), 'DisplayName', string(LABEL(4)), 'LineStyle', LineStyle)
-plot((GC - RM) / 200 : 1 / 200 : 0, V0u_Lu(1, GC : RM), 'Color', c(5, :), 'DisplayName', string(LABEL(5)), 'LineStyle', LineStyle)
-plot((GC - RM) / 200 : 1 / 200 : 0, V0u_Lr(1, GC : RM), 'Color', c(6, :), 'DisplayName', string(LABEL(6)), 'LineStyle', LineStyle)
+plot((GC - RM) / 200 : 1 / 200 : 0, V0u_Ex(1, GC : RM), 'Color', c(4, :), 'DisplayName', string(LABEL(4)))
+plot((GC - RM) / 200 : 1 / 200 : 0, V0u_Lu(1, GC : RM), 'Color', c(5, :), 'DisplayName', string(LABEL(5)))
+plot((GC - RM) / 200 : 1 / 200 : 0, V0u_Lr(1, GC : RM), 'Color', c(6, :), 'DisplayName', string(LABEL(6)))
 
-plot((GC - RM) / 200 : 1 / 200 : 0, V1_Ab(1, GC : RM), 'Color', c(7, :), 'DisplayName', string(LABEL(7)), 'LineStyle', LineStyle)
-plot((GC - RM) / 200 : 1 / 200 : 0, V1_Ex(1, GC : RM), 'Color', c(8, :), 'DisplayName', string(LABEL(8)), 'LineStyle', LineStyle)
-plot((GC - RM) / 200 : 1 / 200 : 0, V1_Ir(1, GC : RM), 'Color', c(9, :), 'DisplayName', string(LABEL(9)), 'LineStyle', LineStyle)
+plot((GC - RM) / 200 : 1 / 200 : 0, V1_Ab(1, GC : RM), 'Color', c(7, :), 'DisplayName', string(LABEL(7)))
+plot((GC - RM) / 200 : 1 / 200 : 0, V1_Ex(1, GC : RM), 'Color', c(8, :), 'DisplayName', string(LABEL(8)))
+plot((GC - RM) / 200 : 1 / 200 : 0, V1_Ir(1, GC : RM), 'Color', c(9, :), 'DisplayName', string(LABEL(9)))
 
-plot((GC - RM) / 200 : 1 / 200 : 0, V2_Fr(1, GC : RM), 'Color', c(10, :), 'DisplayName', string(LABEL(10)), 'LineStyle', LineStyle)
-plot((GC - RM) / 200 : 1 / 200 : 0, V2_Ab(1, GC : RM), 'Color', c(11, :), 'DisplayName', string(LABEL(11)), 'LineStyle', LineStyle)
-plot((GC - RM) / 200 : 1 / 200 : 0, V2_Er(1, GC : RM), 'Color', c(12, :), 'DisplayName', string(LABEL(12)), 'LineStyle', LineStyle)
+plot((GC - RM) / 200 : 1 / 200 : 0, V2_Fr(1, GC : RM), 'Color', c(10, :), 'DisplayName', string(LABEL(10)))
+plot((GC - RM) / 200 : 1 / 200 : 0, V2_Ab(1, GC : RM), 'Color', c(11, :), 'DisplayName', string(LABEL(11)))
+plot((GC - RM) / 200 : 1 / 200 : 0, V2_Er(1, GC : RM), 'Color', c(12, :), 'DisplayName', string(LABEL(12)))
 
-plot((GC - RM) / 200 : 1 / 200 : 0, V3_Pf(1, GC : RM), 'Color', c(13, :), 'DisplayName', string(LABEL(13)), 'LineStyle', LineStyle)
-plot((GC - RM) / 200 : 1 / 200 : 0, V3_Ab(1, GC : RM), 'Color', c(14, :), 'DisplayName', string(LABEL(14)), 'LineStyle', LineStyle)
-plot((GC - RM) / 200 : 1 / 200 : 0, V3_Ir(1, GC : RM), 'Color', c(15, :), 'DisplayName', string(LABEL(15)), 'LineStyle', LineStyle)
+plot((GC - RM) / 200 : 1 / 200 : 0, V3_Pf(1, GC : RM), 'Color', c(13, :), 'DisplayName', string(LABEL(13)))
+plot((GC - RM) / 200 : 1 / 200 : 0, V3_Ab(1, GC : RM), 'Color', c(14, :), 'DisplayName', string(LABEL(14)))
+plot((GC - RM) / 200 : 1 / 200 : 0, V3_Ir(1, GC : RM), 'Color', c(15, :), 'DisplayName', string(LABEL(15)))
 
-plot((GC - RM) / 200 : 1 / 200 : 0, V4_Ab(1, GC : RM), 'Color', c(16, :), 'DisplayName', string(LABEL(16)), 'LineStyle', LineStyle)
-plot((GC - RM) / 200 : 1 / 200 : 0, V4_Ex(1, GC : RM), 'Color', c(17, :), 'DisplayName', string(LABEL(17)), 'LineStyle', LineStyle)
-plot((GC - RM) / 200 : 1 / 200 : 0, V4_Ir(1, GC : RM), 'Color', c(18, :), 'DisplayName', string(LABEL(18)), 'LineStyle', LineStyle)
+plot((GC - RM) / 200 : 1 / 200 : 0, V4_Ab(1, GC : RM), 'Color', c(16, :), 'DisplayName', string(LABEL(16)))
+plot((GC - RM) / 200 : 1 / 200 : 0, V4_Ex(1, GC : RM), 'Color', c(17, :), 'DisplayName', string(LABEL(17)))
+plot((GC - RM) / 200 : 1 / 200 : 0, V4_Ir(1, GC : RM), 'Color', c(18, :), 'DisplayName', string(LABEL(18)))
 
-plot((GC - RM) / 200 : 1 / 200 : 0, Vg0l(1, GC : RM), 'Color', c(19, :), 'DisplayName', 'Vg0l', 'LineStyle', LineStyle)
-plot((GC - RM) / 200 : 1 / 200 : 0, V0l(1, GC : RM), 'Color', c(20, :), 'DisplayName', 'V0l', 'LineStyle', LineStyle)
+plot((GC - RM) / 200 : 1 / 200 : 0, Vg0l(1, GC : RM), 'Color', c(19, :), 'DisplayName', 'Vg0l')
+plot((GC - RM) / 200 : 1 / 200 : 0, V0l(1, GC : RM), 'Color', c(20, :), 'DisplayName', 'V0l')
 
 legend('Location', 'best', 'NumColumns', 6)
 
-end
+

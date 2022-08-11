@@ -1,0 +1,182 @@
+function INT = GetINT_ABC(ExpDat, iData)
+
+    addpath('../')
+    addpath('../../')    
+    
+    Constants = GetConstants2(ExpDat, iData);
+    tDeps = GetTDepend2(ExpDat, iData);
+    
+    NUM_FRAME = ExpDat(iData).nFr;
+
+    m0u = Constants.m(2);
+    m1 = Constants.m(3);
+    m2 = Constants.m(4);
+    m3 = Constants.m(5);
+    m4 = Constants.m(6);
+        
+    L0 = tDeps.L0;
+    L1 = tDeps.L1;
+    L2 = tDeps.L2;
+    L3 = tDeps.L3;
+    
+    Lg0 = tDeps.Lg0;
+    Lg1 = tDeps.Lg1;
+    Lg2 = tDeps.Lg2;
+    Lg3 = tDeps.Lg3;
+    Lg4 = tDeps.Lg4;
+
+    Om0 = tDeps.Om0;
+    Om1 = tDeps.Om1;
+    Om2 = tDeps.Om2;
+    Om3 = tDeps.Om3;
+    Om4 = tDeps.Om4;
+
+    Rj0 = tDeps.Rj0;
+    Rj1 = tDeps.Rj1;
+    Rj2 = tDeps.Rj2;
+    Rj3 = tDeps.Rj3;
+    Rj4 = tDeps.Rj4;
+
+    thd0 = tDeps.thd0;
+    thd1 = tDeps.thd1;
+    thd2 = tDeps.thd2;
+    thd3 = tDeps.thd3;
+    thd4 = tDeps.thd4;
+    
+    for iFrame = 1 : NUM_FRAME
+        A0(:, iFrame) = cross(Om0(:, iFrame), Rj0(:, :, iFrame) * thd0(:, iFrame));
+        A1(:, iFrame) = cross(Om1(:, iFrame), Rj1(:, :, iFrame) * thd1(:, iFrame));
+        A2(:, iFrame) = cross(Om2(:, iFrame), Rj2(:, :, iFrame) * thd2(:, iFrame));
+        A3(:, iFrame) = cross(Om3(:, iFrame), Rj3(:, :, iFrame) * thd3(:, iFrame));
+        A4(:, iFrame) = cross(Om4(:, iFrame), Rj4(:, :, iFrame) * thd4(:, iFrame));
+    end
+    
+    om0u = tDeps.om0u;
+    om1 = tDeps.om1;
+    om2 = tDeps.om2;
+    om3 = tDeps.om3;
+    om4 = tDeps.om4;
+
+    B0 = cross(om0u, cross(om0u, L0));
+    Bg0 = cross(om0u, cross(om0u, Lg0));
+    B1 = cross(om1, cross(om1, L1));
+    Bg1 = cross(om1, cross(om1, Lg1));
+    B2 = cross(om2, cross(om2, L2));
+    Bg2 = cross(om2, cross(om2, Lg2));
+    B3 = cross(om3, cross(om3, L3));
+    Bg3 = cross(om3, cross(om3, Lg3));
+    Bg4 = cross(om4, cross(om4, Lg4));
+
+    fprintf('A, B, L defined\t')
+    toc
+
+    I_gcs0 = tDeps.I_gcs0;
+    I_gcs1 = tDeps.I_gcs1;
+    I_gcs2 = tDeps.I_gcs2;
+    I_gcs3 = tDeps.I_gcs3;
+    I_gcs4 = tDeps.I_gcs4;
+    
+    for iFrame = 1 : NUM_FRAME
+        C0(:, iFrame) = cross(om0u, I_gcs0*om0u);
+        C1(:, iFrame) = cross(om1, I_gcs1*om1);
+        C2(:, iFrame) = cross(om2, I_gcs2*om2);
+        C3 = cross(om3, I_gcs3*om3);
+        C4 = cross(om4, I_gcs4*om4);
+    end
+    
+    fprintf('Initialized\n')
+    toc
+    
+    tic
+    for iFrame = 1 : NUM_FRAME
+        iFrame_ = iFrame;
+    
+        L01 = L0(1, iFrame_);
+        L02 = L0(2, iFrame_);
+        L03 = L0(3, iFrame_);
+        
+        L11 = L1(1, iFrame_);
+        L12 = L1(2, iFrame_);
+        L13 = L1(3, iFrame_);
+        
+        L21 = L2(1, iFrame_);
+        L22 = L2(2, iFrame_);
+        L23 = L2(3, iFrame_);
+        
+        L31 = L3(1, iFrame_);
+        L32 = L3(2, iFrame_);
+        L33 = L3(3, iFrame_);
+
+        Lg01 = Lg0(1, iFrame_);
+        Lg02 = Lg0(2, iFrame_);
+        Lg03 = Lg0(3, iFrame_);
+        
+        Lg11 = Lg1(1, iFrame_);
+        Lg12 = Lg1(2, iFrame_);
+        Lg13 = Lg1(3, iFrame_);
+        
+        Lg21 = Lg2(1, iFrame_);
+        Lg22 = Lg2(2, iFrame_);
+        Lg23 = Lg2(3, iFrame_);
+        
+        Lg31 = Lg3(1, iFrame_);
+        Lg32 = Lg3(2, iFrame_);
+        Lg33 = Lg3(3, iFrame_);
+        
+        Lg41 = Lg4(1, iFrame_);
+        Lg42 = Lg4(2, iFrame_);
+        Lg43 = Lg4(3, iFrame_);
+    
+        INT_A0 = find_INT_A0(A01,A02,A03,L01,L02,L03,L11,L12,L13,L21,L22,L23,L31,L32,L33,Lg01,Lg02,Lg03,Lg11,Lg12,Lg13,Lg21,Lg22,Lg23,Lg31,Lg32,Lg33,Lg41,Lg42,Lg43,m1,m2,m3,m4,m0u);
+        INT_A1 = find_INT_A1(A11,A12,A13,L01,L02,L03,L11,L12,L13,L21,L22,L23,L31,L32,L33,Lg11,Lg12,Lg13,Lg21,Lg22,Lg23,Lg31,Lg32,Lg33,Lg41,Lg42,Lg43,m1,m2,m3,m4);
+        INT_A2 = find_INT_A2(A21,A22,A23,L01,L02,L03,L11,L12,L13,L21,L22,L23,L31,L32,L33,Lg21,Lg22,Lg23,Lg31,Lg32,Lg33,Lg41,Lg42,Lg43,m2,m3,m4);
+        INT_A3 = find_INT_A3(A31,A32,A33,L01,L02,L03,L11,L12,L13,L21,L22,L23,L31,L32,L33,Lg31,Lg32,Lg33,Lg41,Lg42,Lg43,m3,m4);
+        INT_A4 = find_INT_A4(A41,A42,A43,L01,L02,L03,L11,L12,L13,L21,L22,L23,L31,L32,L33,Lg41,Lg42,Lg43,m4);
+
+        INT_B0 = find_INT_B0(B01,B02,B03,L01,L02,L03,L11,L12,L13,L21,L22,L23,L31,L32,L33,Lg11,Lg12,Lg13,Lg21,Lg22,Lg23,Lg31,Lg32,Lg33,Lg41,Lg42,Lg43,m1,m2,m3,m4);
+        INT_B1 = find_INT_B1(B11,B12,B13,L01,L02,L03,L11,L12,L13,L21,L22,L23,L31,L32,L33,Lg21,Lg22,Lg23,Lg31,Lg32,Lg33,Lg41,Lg42,Lg43,m2,m3,m4);
+        INT_B2 = find_INT_B2(B21,B22,B23,L01,L02,L03,L11,L12,L13,L21,L22,L23,L31,L32,L33,Lg31,Lg32,Lg33,Lg41,Lg42,Lg43,m3,m4);
+        INT_B3 = find_INT_B3(B31,B32,B33,L01,L02,L03,L11,L12,L13,L21,L22,L23,L31,L32,L33,Lg41,Lg42,Lg43,m4);
+
+        INT_Bg0 = find_INT_Bg0(Bg01,Bg02,Bg03,Lg01,Lg02,Lg03,m0u);
+        INT_Bg1 = find_INT_Bg1(Bg11,Bg12,Bg13,L01,L02,L03,Lg11,Lg12,Lg13,m1);
+        INT_Bg2 = find_INT_Bg2(Bg21,Bg22,Bg23,L01,L02,L03,L11,L12,L13,Lg21,Lg22,Lg23,m2);
+        INT_Bg3 = find_INT_Bg3(Bg31,Bg32,Bg33,L01,L02,L03,L11,L12,L13,L21,L22,L23,Lg31,Lg32,Lg33,m3);
+        INT_Bg4 = find_INT_Bg4(Bg41,Bg42,Bg43,L01,L02,L03,L11,L12,L13,L21,L22,L23,L31,L32,L33,Lg41,Lg42,Lg43,m4);
+
+        INT_C0 = find_INT_C0(C01,C02,C03);
+        INT_C1 = find_INT_C1(C11,C12,C13);
+        INT_C2 = find_INT_C2(C21,C22,C23);
+        INT_C3 = find_INT_C3(C31,C32,C33);
+        INT_C4 = find_INT_C4(C41,C42,C43);
+
+        INT_Other = find_INT_Other(L01,L02,L03,L11,L12,L13,L21,L22,L23,L31,L32,L33,L0l1,L0l2,L0l3,Lg01,Lg02,Lg03,Lg11,Lg12,Lg13,Lg21,Lg22,Lg23,Lg31,Lg32,Lg33,Lg41,Lg42,Lg43,Lg0l1,Lg0l2,Lg0l3,m1,m2,m3,m4,m0u,om0l_1,om0l_2,om0l_3,omd0l_1,omd0l_2,omd0l_3);
+
+        INT(iData).A0(:, iFrame_) = INT_A0;
+        INT(iData).A1(:, iFrame_) = INT_A1;
+        INT(iData).A2(:, iFrame_) = INT_A2;
+        INT(iData).A3(:, iFrame_) = INT_A3;
+        INT(iData).A4(:, iFrame_) = INT_A4;
+
+        INT(iData).B0(:, iFrame_) = INT_B0;
+        INT(iData).B1(:, iFrame_) = INT_B1;
+        INT(iData).B2(:, iFrame_) = INT_B2;
+        INT(iData).B3(:, iFrame_) = INT_B3;
+
+        INT(iData).Bg0(:, iFrame_) = INT_Bg0;
+        INT(iData).Bg1(:, iFrame_) = INT_Bg1;
+        INT(iData).Bg2(:, iFrame_) = INT_Bg2;
+        INT(iData).Bg3(:, iFrame_) = INT_Bg3;
+        INT(iData).Bg4(:, iFrame_) = INT_Bg4;
+
+        INT(iData).C0(:, iFrame_) = INT_C0;
+        INT(iData).C1(:, iFrame_) = INT_C1;
+        INT(iData).C2(:, iFrame_) = INT_C2;
+        INT(iData).C3(:, iFrame_) = INT_C3;
+        INT(iData).C4(:, iFrame_) = INT_C4;
+
+        INT(iData).O(:, iFrame_) = INT_Other;
+
+        
+    end
+end

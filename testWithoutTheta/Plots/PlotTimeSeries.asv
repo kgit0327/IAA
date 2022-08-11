@@ -27,6 +27,25 @@ c = [1, 0.25, 0.1; 1, 1, 0; 0.1, 0.5, 0.1; 0, 0.55, 1; 0.45, 1, 1; 1, 0.45, 0.65
      0.45, 0.1, 0; 1, 0.75, 0.85; 1, 1, 0.6; 0.2, 1, 0.1; 0.7, 1, 1; 1, 0.75, 0.55; 0.55, 1, 0.55; 0.75, 0.7, 1; ...
      0, 0, 0; 0.78, 0.78, 0.79; 0.6, 0.6, 0.2; 0.51, 0.56, 0.61];
 
+% PlotTogether(1, v(:, 1), LABEL, c, IAADatas, ExpDat, GC2RMdat)
+% PlotTogether(2, v(:, 2), LABEL, c, IAADatas, ExpDat, GC2RMdat)
+% PlotTogether(3, v(:, 3), LABEL, c, IAADatas, ExpDat, GC2RMdat)
+% PlotTogether(4, v(:, 4), LABEL, c, IAADatas, ExpDat, GC2RMdat)
+% PlotTogether(5, v(:, 5), LABEL, c, IAADatas, ExpDat, GC2RMdat)
+% PlotTogether(6, v(:, 6), LABEL, c, IAADatas, ExpDat, GC2RMdat)
+% PlotTogether(7, v(:, 7), LABEL, c, IAADatas, ExpDat, GC2RMdat)
+% PlotTogether(8, v(:, 8), LABEL, c, IAADatas, ExpDat, GC2RMdat)
+% PlotTogether(9, v(:, 9), LABEL, c, IAADatas, ExpDat, GC2RMdat)
+% PlotTogether(10, v(:, 10), LABEL, c, IAADatas, ExpDat, GC2RMdat)
+% PlotTogether(11, v(:, 11), LABEL, c, IAADatas, ExpDat, GC2RMdat)
+% PlotTogether(12, v(:, 12), LABEL, c, IAADatas, ExpDat, GC2RMdat)
+% PlotTogether(13, v(:, 13), LABEL, c, IAADatas, ExpDat, GC2RMdat)
+% PlotTogether(14, v(:, 14), LABEL, c, IAADatas, ExpDat, GC2RMdat)
+% PlotTogether(15, v(:, 15), LABEL, c, IAADatas, ExpDat, GC2RMdat)
+% PlotTogether(16, v(:, 16), LABEL, c, IAADatas, ExpDat, GC2RMdat)
+% PlotTogether(17, v(:, 17), LABEL, c, IAADatas, ExpDat, GC2RMdat)
+% PlotTogether(18, v(:, 18), LABEL, c, IAADatas, ExpDat, GC2RMdat)
+
 for i = 1 : 6
     figure
     tiledlayout(3, 1);
@@ -53,9 +72,9 @@ function PlotTogether(a, v, LABEL, c, IAADatas, ExpDat, GC2RMdat)
         plot((GC50 - RM50) / 200 : 1 / 200 : 0, IAADatas(3).th2d_(a).tau(i, GC50 : RM50), 'Color', c(i, :), 'LineStyle', ':', 'DisplayName', append('50 bpm ', string(LABEL(i))))
     end
 
-    legend(Location="eastoutside", Orientation="horizontal", NumColumns=3);
+    lgd = legend(Location="northoutside", Orientation="horizontal", NumColumns=3);
+    lgd.Layout.Tile = 
     title(string(LABEL(a)))
-    xlim([-0.4 0])
-    set(gca, 'FontSize', 26)
+    xlim([-0.64 0])
     hold off
 end

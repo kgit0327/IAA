@@ -96,7 +96,7 @@ function segdat = GetRacketSegmentData(ExperimentDatas, iData)
         %-------
         zrhR = R(:, 3);
         yrhR = ExperimentDatas(iData).SCS(1).Var(iFrame).R(:, 2);
-        xrhR = cross(yrhR, zrhR);
+        xrhR = unitvec(cross(yrhR, zrhR));
       
         R_JCS = [xrhR yrhR zrhR];
         
@@ -107,7 +107,7 @@ function segdat = GetRacketSegmentData(ExperimentDatas, iData)
         
         %---JA.s(伸展 + /屈曲 - ) 
         % Rotation axis is parallel to the racket face, towards down marker
-        tmp = R_JCS \ unitvec(zrhR);
+        tmp = [xrhR, yrhR, cross(xrhR, yrhR)] \ unitvec(zrhR);
         JAtmp.rhEF = atan2(tmp(2), tmp(3));
         
         %---JA.s(内旋 + /外旋 - )
